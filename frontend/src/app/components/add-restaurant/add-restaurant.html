@@ -1,0 +1,21 @@
+<div class="container mt-5">
+  <div class="card p-4 shadow-lg border-0 bg-dark text-white mx-auto" style="max-width: 500px;">
+    <h2 class="text-warning mb-2"> Add Restaurant</h2>
+    <p class="text-secondary small mb-4">Paste the Google Maps share link. We'll automatically detect the city and details.</p>
+
+    <div class="mb-4">
+      <label class="form-label text-uppercase small fw-bold text-secondary">Google Maps Link</label>
+      <input type="text"
+             class="form-control bg-dark border-secondary text-white py-2"
+             [(ngModel)]="googleMapsLink"
+             placeholder="https://maps.app.goo.gl/..."
+             [disabled]="isLoading">
+    </div>
+
+    <button class="btn btn-warning w-100 fw-bold py-2"
+            (click)="onAdd()"
+            [disabled]="!googleMapsLink || isLoading">
+      {{ isLoading ? 'SCRAPING DATA...' : 'ADD TO YELP PK' }}
+    </button>
+  </div>
+</div>

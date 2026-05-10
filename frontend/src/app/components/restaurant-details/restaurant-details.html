@@ -1,0 +1,53 @@
+<div *ngIf="restaurant" class="mt-4">
+  <div class="row">
+    <div class="col-md-8">
+      <h1 class="fw-bold display-4">{{ restaurant.name }}</h1>
+      <p class="fs-5 text-secondary"><i class="bi bi-geo-alt-fill"></i> {{ restaurant.location }}</p>
+
+      <div class="d-flex align-items-center mb-4">
+        <div class="bg-warning text-dark px-3 py-1 rounded fw-bold fs-4 me-3">{{ restaurant.averageRating || 'N/A' }} ★</div>
+        <span class="text-secondary">{{ restaurant.reviewCount }} Total Reviews</span>
+      </div>
+
+      <hr class="border-secondary">
+
+      <h3 class="fw-bold mt-4">Customer Reviews</h3>
+      <div class="list-group list-group-flush bg-transparent">
+        <div class="list-group-item bg-transparent text-white border-secondary px-0 py-4" *ngFor="let rev of reviews">
+          <div class="d-flex justify-content-between">
+            <h6 class="fw-bold text-warning">{{ rev.userName }}</h6>
+            <span class="text-secondary small">{{ rev.date | date:'mediumDate' }}</span>
+          </div>
+          <div class="mb-2">
+            <span class="text-warning" *ngFor="let star of [1,2,3,4,5]">
+              <i class="bi" [ngClass]="star <= rev.rating ? 'bi-star-fill' : 'bi-star text-secondary'"></i>
+            </span>
+          </div>
+          <p class="mb-0 text-light">{{ rev.comment }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card bg-dark text-white p-4 border-secondary shadow sticky-top" style="top: 20px;">
+        <h4 class="fw-bold text-warning mb-3">Rate this Spot</h4>
+        <p class="small text-secondary">Posting as <strong>{{ authService.getUserName() }}</strong></p>
+
+        <label class="small fw-bold text-uppercase text-secondary">Rating</label>
+        <select class="form-select bg-dark text-white border-secondary mb-3" [(ngModel)]="newRating">
+          <option [value]="5">5 - Must Visit!</option>
+          <option [value]="4">4 - Really Good</option>
+          <option [value]="3">3 - Decent</option>
+          <option [value]="2">2 - Not Great</option>
+          <option [value]="1">1 - Terrible</option>
+        </select>
+
+        <label class="small fw-bold text-uppercase text-secondary">Your Experience</label>
+        <textarea class="form-control bg-dark text-white border-secondary mb-4"
+                  rows="4" [(ngModel)]="newComment" placeholder="Write something..."></textarea>
+
+        <button class="btn btn-warning w-100 fw-bold py-2" (click)="submitReview()">POST REVIEW</button>
+      </div>
+    </div>
+  </div>
+</div>

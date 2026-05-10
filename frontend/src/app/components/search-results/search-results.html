@@ -1,0 +1,42 @@
+<div class="row g-4 mt-2">
+  <div class="col-md-4">
+    <div class="card bg-dark text-white p-4 border-secondary shadow">
+      <h5 class="fw-bold mb-3 text-warning">Filters</h5>
+      <label class="small text-uppercase text-secondary fw-bold">Location</label>
+      <select class="form-select bg-dark text-white border-secondary mb-3" [(ngModel)]="searchCity" (change)="search()">
+        <option value="">All Cities</option>
+        <option value="islamabad">Islamabad</option>
+        <option value="rawalpindi">Rawalpindi</option>
+        <option value="lahore">Lahore</option>
+        <option value="karachi">Karachi</option>
+      </select>
+
+      <label class="small text-uppercase text-secondary fw-bold">Restaurant Name</label>
+      <input type="text" class="form-control bg-dark text-white border-secondary"
+             [(ngModel)]="searchName" (input)="search()" placeholder="e.g. Savour">
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <div *ngIf="restaurants.length === 0" class="text-center py-5 border border-dashed rounded text-secondary">
+      <h5>No restaurants found in {{ searchCity || 'Pakistan' }}</h5>
+    </div>
+
+    <div class="card bg-dark text-white mb-3 border-secondary shadow-sm overflow-hidden" *ngFor="let r of restaurants">
+      <div class="row g-0">
+        <div class="col-md-4">
+          <img [src]="r.imageUrl" class="img-fluid h-100 w-100 object-fit-cover" style="min-height: 150px;">
+        </div>
+        <div class="col-md-8 p-3">
+          <div class="d-flex justify-content-between">
+            <h5 class="fw-bold mb-1">{{ r.name }}</h5>
+            <span class="badge bg-warning text-dark">{{ r.averageRating || 'New' }} ★</span>
+          </div>
+          <p class="text-secondary small mb-2"><i class="bi bi-geo-alt"></i> {{ r.location }}</p>
+          <p class="small text-light">{{ r.description }}</p>
+          <button class="btn btn-outline-warning btn-sm mt-2" [routerLink]="['/restaurant', r._id]">View Details & Reviews</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

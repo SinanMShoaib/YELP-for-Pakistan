@@ -1,0 +1,38 @@
+<div class="auth-container d-flex align-items-center justify-content-center">
+  <div class="card auth-card shadow-lg border-0 bg-dark text-white p-4">
+    <div class="text-center mb-4">
+      <h2 class="fw-bold">{{ isLoginMode ? 'Welcome Back' : 'Join Yelp Pakistan' }}</h2>
+      <p class="text-secondary">{{ isLoginMode ? 'Enter your credentials to continue' : 'Create an account to start reviewing' }}</p>
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger py-2 text-center">{{ error }}</div>
+
+    <form (ngSubmit)="onSubmit()">
+      <div class="mb-3" *ngIf="!isLoginMode">
+        <label class="form-label small text-uppercase fw-bold text-secondary">Full Name</label>
+        <input type="text" class="form-control bg-dark border-secondary text-white" [(ngModel)]="authData.name" name="name" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label small text-uppercase fw-bold text-secondary">Email Address</label>
+        <input type="email" class="form-control bg-dark border-secondary text-white" [(ngModel)]="authData.email" name="email" required>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label small text-uppercase fw-bold text-secondary">Password</label>
+        <input type="password" class="form-control bg-dark border-secondary text-white" [(ngModel)]="authData.password" name="password" required>
+      </div>
+
+      <button type="submit" class="btn btn-warning w-100 fw-bold mb-3 py-2" [disabled]="isLoading">
+        {{ isLoading ? 'Processing...' : (isLoginMode ? 'LOGIN' : 'SIGN UP') }}
+      </button>
+
+      <div class="text-center mt-3">
+        <span class="text-secondary small">{{ isLoginMode ? "Don't have an account?" : "Already have an account?" }}</span>
+        <button type="button" class="btn btn-link text-warning btn-sm p-0 ms-1 fw-bold" (click)="onToggleMode()">
+          {{ isLoginMode ? 'Create Account' : 'Sign In' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

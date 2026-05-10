@@ -1,0 +1,13 @@
+.nav-link {
+  cursor: pointer;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.nav-link:hover {
+  color: #ffc107 !important; /* Turn yellow on hover */
+}
+
+.navbar {
+  padding: 1rem 0;
+}

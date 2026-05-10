@@ -1,0 +1,24 @@
+<nav *ngIf="router.url !== '/auth'" class="navbar navbar-expand-lg navbar-dark bg-dark shadow-lg border-bottom border-secondary mb-4">
+  <div class="container">
+    <a class="navbar-brand fw-bold text-warning fs-3" routerLink="/search">YELP <span class="text-white">PK</span></a>
+
+    <div class="d-flex align-items-center">
+      <a class="nav-link text-secondary me-3" routerLink="/search" routerLinkActive="text-white fw-bold">Search</a>
+
+      <ng-container *ngIf="authService.isLoggedIn$ | async; else loggedOut">
+        <a class="nav-link text-secondary me-3" routerLink="/add" routerLinkActive="text-white fw-bold">Add Restaurant</a>
+        <div class="vr bg-secondary mx-2" style="height: 20px;"></div>
+        <span class="text-warning small mx-3">Hi, {{ authService.getUserName() }}</span>
+        <button class="btn btn-outline-danger btn-sm rounded-pill" (click)="authService.logout()">Logout</button>
+      </ng-container>
+
+      <ng-template #loggedOut>
+        <a class="btn btn-warning btn-sm fw-bold px-4 rounded-pill" routerLink="/auth">LOGIN</a>
+      </ng-template>
+    </div>
+  </div>
+</nav>
+
+<div class="container pb-5">
+  <router-outlet></router-outlet>
+</div>
