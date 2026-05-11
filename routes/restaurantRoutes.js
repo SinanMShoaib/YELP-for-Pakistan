@@ -7,7 +7,6 @@ const axios = require('axios');
 const auth = require('../middleware/auth');
 const client = new Client({});
 
-// --- HELPER: AUTO-DETECT CITY ---
 // --- HELPER: AUTO-DETECT CITY (LOWERCASE) ---
 const detectCity = (address) => {
     const addressLower = address.toLowerCase();

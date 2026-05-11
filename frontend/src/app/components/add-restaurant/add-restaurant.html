@@ -1,21 +1,32 @@
 <div class="container mt-5">
+  <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show mx-auto border-0 shadow-sm mb-4"
+       style="max-width: 500px; background-color: #2c0b0e; color: #ea868f;" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <strong>Error:</strong> {{ errorMessage }}
+    <button type="button" class="btn-close btn-close-white" (click)="errorMessage = ''" aria-label="Close"></button>
+  </div>
+
   <div class="card p-4 shadow-lg border-0 bg-dark text-white mx-auto" style="max-width: 500px;">
-    <h2 class="text-warning mb-2"> Add Restaurant</h2>
-    <p class="text-secondary small mb-4">Paste the Google Maps share link. We'll automatically detect the city and details.</p>
+    <h2 class="text-warning mb-2">Add Restaurant</h2>
+    <p class="text-secondary small mb-4">
+      Paste the Google Maps share link. We'll automatically detect the city and details.
+    </p>
 
     <div class="mb-4">
       <label class="form-label text-uppercase small fw-bold text-secondary">Google Maps Link</label>
       <input type="text"
-             class="form-control bg-dark border-secondary text-white py-2"
+             class="form-control bg-dark border-secondary text-white py-2 shadow-none"
              [(ngModel)]="googleMapsLink"
              placeholder="https://maps.app.goo.gl/..."
-             [disabled]="isLoading">
+             [disabled]="isLoading"
+             (keyup.enter)="googleMapsLink && !isLoading ? onAdd() : null">
     </div>
 
-    <button class="btn btn-warning w-100 fw-bold py-2"
+    <button class="btn btn-warning w-100 fw-bold py-2 text-uppercase"
             (click)="onAdd()"
             [disabled]="!googleMapsLink || isLoading">
-      {{ isLoading ? 'SCRAPING DATA...' : 'ADD TO YELP PK' }}
+      <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+      {{ isLoading ? 'Scraping Data...' : 'Add to Yelp PK' }}
     </button>
   </div>
 </div>

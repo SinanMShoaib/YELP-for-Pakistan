@@ -1,3 +1,14 @@
+<div *ngIf="isNewlyAdded" class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4"
+     style="background-color: #0f2d1f; color: #75b798;" role="alert">
+  <div class="d-flex align-items-center justify-content-center py-2">
+    <div class="text-center">
+      <h4 class="alert-heading fw-bold mb-1">Success! 🎉</h4>
+      <p class="mb-0">The restaurant has been added. You can now rate it and share your feedback!</p>
+    </div>
+  </div>
+  <button type="button" class="btn-close btn-close-white" (click)="isNewlyAdded = false"></button>
+</div>
+
 <div *ngIf="restaurant" class="mt-4">
   <div class="row">
     <div class="col-md-8">

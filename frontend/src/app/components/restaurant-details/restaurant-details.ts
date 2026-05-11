@@ -19,6 +19,7 @@ export class RestaurantDetails implements OnInit {
   // 2. Flatten these to match the [(ngModel)] names in the UI
   newRating: number = 5;
   newComment: string = '';
+  isNewlyAdded: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -28,7 +29,19 @@ export class RestaurantDetails implements OnInit {
   ) {}
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
+  const id = this.route.snapshot.paramMap.get('id');
+
+  // 2. Check if 'newlyAdded' exists in the query parameters (?newlyAdded=true)
+  this.isNewlyAdded = this.route.snapshot.queryParamMap.get('newlyAdded') === 'true';
+
+  // Optional: Auto-hide the success message after 10 seconds
+  if (this.isNewlyAdded) {
+    setTimeout(() => {
+      this.isNewlyAdded = false;
+      this.cdr.detectChanges(); // Ensure the UI updates
+    }, 10000);
+  }
+
     if (id) {
       this.api.getRestaurantById(id).subscribe({
         next: (data: any) => {
