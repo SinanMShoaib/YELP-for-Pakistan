@@ -6,7 +6,7 @@ import { Observable, BehaviorSubject, tap } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = 'http://localhost:3000/api/auth';
+  private baseUrl = '/api/auth';
 
   // Tracks login status for the Navbar
   private loggedIn = new BehaviorSubject<boolean>(!!localStorage.getItem('token'));
