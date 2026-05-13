@@ -22,7 +22,7 @@ export class AddRestaurantComponent {
     this.isLoading = true;
     this.errorMessage = ''; // Clear any previous error messages
 
-    this.http.post('http://localhost:3000/api/restaurants/add', {
+    this.http.post('/api/restaurants/add', {
       googleMapsLink: this.googleMapsLink
     }).subscribe({
       next: (res: any) => {
