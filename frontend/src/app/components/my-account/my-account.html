@@ -1,10 +1,37 @@
 <div class="row justify-content-center mt-5 mb-5">
-  <div class="col-md-8 col-lg-6">
-    <div class="glass-panel p-5 animate-fade-in shadow-2xl">
+  <div class="col-md-10 col-lg-8">
+    <div class="glass-panel p-5 animate-fade-in shadow-2xl overflow-hidden position-relative">
+      <!-- Decorative background element -->
+      <div class="position-absolute top-0 end-0 p-5 opacity-10" style="font-size: 10rem; transform: translate(30%, -30%);">
+        <i class="fa-solid fa-user-shield"></i>
+      </div>
+
       <div class="text-center mb-5">
         <div class="badge rounded-pill bg-danger bg-opacity-10 text-danger px-3 py-1 mb-3 fw-bold">User Sanctuary</div>
         <h2 class="fw-bold display-6" style="color: var(--text-color);">Command <span style="color: var(--accent-red)">Center</span></h2>
         <p style="color: var(--text-muted);">Architect your profile and manage enterprise assets.</p>
+      </div>
+
+      <!-- Quick Stats Overview -->
+      <div class="row g-3 mb-5">
+        <div class="col-md-4">
+          <div class="glass-panel p-3 text-center border-primary border-opacity-10">
+            <h3 class="fw-bold text-primary mb-0">{{ userReviews.length }}</h3>
+            <p class="x-small text-uppercase mb-0 opacity-75">Reviews Authored</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="glass-panel p-3 text-center border-success border-opacity-10">
+            <h3 class="fw-bold text-success mb-0">{{ submissions.length }}</h3>
+            <p class="x-small text-uppercase mb-0 opacity-75">Spots Discovered</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="glass-panel p-3 text-center border-warning border-opacity-10">
+            <h3 class="fw-bold text-warning mb-0">{{ user.fitHaeTokens }}</h3>
+            <p class="x-small text-uppercase mb-0 opacity-75">Loyalty Tokens</p>
+          </div>
+        </div>
       </div>
 
       <div *ngIf="message" class="alert glass-panel mb-4 text-center animate-fade-in shadow-sm" 
@@ -13,125 +40,115 @@
         {{ message }}
       </div>
 
-      <!-- Identity Management -->
-      <div class="mb-5">
-        <h4 class="fw-bold mb-4" style="color: var(--text-color);"><i class="fa-solid fa-id-card text-danger me-2"></i>Identity</h4>
-        <form (ngSubmit)="updateProfile()">
-          <div class="row g-3">
-            <div class="col-md-6 mb-3">
+      <div class="row g-5">
+        <!-- Identity Management -->
+        <div class="col-lg-6">
+          <h4 class="fw-bold mb-4" style="color: var(--text-color);"><i class="fa-solid fa-id-card text-danger me-2"></i>Identity</h4>
+          <form (ngSubmit)="updateProfile()">
+            <div class="mb-3">
               <label class="form-label text-muted small fw-bold">Full Name</label>
               <input type="text" class="form-control" [(ngModel)]="user.name" name="name" required>
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="mb-3">
               <label class="form-label text-muted small fw-bold">Username</label>
               <input type="text" class="form-control" [(ngModel)]="user.username" name="username">
             </div>
+            <div class="mb-3">
+              <label class="form-label text-muted small fw-bold">Email (Immutable)</label>
+              <input type="email" class="form-control bg-transparent text-muted opacity-50" [value]="user.email" disabled>
+            </div>
+            <div class="mb-4">
+              <label class="form-label text-muted small fw-bold">Bio / Culinary Philosophy</label>
+              <textarea class="form-control" [(ngModel)]="user.bio" name="bio" rows="3" placeholder="I live for the perfect karahi..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary-custom w-100 fw-bold py-2 shadow-lg">
+              Sync Profile <i class="fa-solid fa-rotate ms-2"></i>
+            </button>
+          </form>
+
+          <div class="mt-5 glass-panel p-4 border-danger border-opacity-25" style="background: rgba(220, 38, 38, 0.02);">
+            <h4 class="fw-bold mb-3" style="color: var(--text-color);"><i class="fa-solid fa-shield-halved text-danger me-2"></i>Security</h4>
+            <div class="input-group">
+              <input type="password" class="form-control border-end-0" placeholder="New Master Password" #newPass>
+              <button class="btn btn-outline-danger px-4" (click)="updatePassword(newPass.value); newPass.value=''">
+                Fortify
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Assets & History -->
+        <div class="col-lg-6">
+          <h4 class="fw-bold mb-4" style="color: var(--text-color);"><i class="fa-solid fa-gem text-warning me-2"></i>Vault</h4>
+          <div class="glass-panel p-4 mb-4" style="background: linear-gradient(135deg, rgba(220, 38, 38, 0.05), transparent);">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h5 class="fw-bold mb-0" style="color: var(--text-color);">FitHae Assets</h5>
+              <span class="badge bg-danger p-2 px-3 fs-6 shadow-sm">
+                <i class="fa-solid fa-coins me-2"></i>{{ user.fitHaeTokens }} Tokens
+              </span>
+            </div>
+            <button class="btn btn-primary-custom w-100 py-2 mb-3" (click)='redeemTokens()' [disabled]="user.fitHaeTokens < 1">
+              REDEEM 1 TOKEN FOR PASS
+            </button>
+
+            <div *ngIf="redeemedCoupon" class="mt-3 p-3 rounded glass-panel border-success animate-fade-in shadow-inner">
+              <h6 class="text-success fw-bold mb-2"><i class="fa-solid fa-check-circle me-2"></i>Asset Ready</h6>
+              <button class="btn btn-success btn-sm w-100 rounded-pill fw-bold" (click)="downloadCoupon(redeemedCoupon.couponId)">
+                <i class="fa-solid fa-download me-1"></i> DOWNLOAD PRIVILEGE PASS
+              </button>
+            </div>
           </div>
 
-          <div class="mb-3">
-            <label class="form-label text-muted small fw-bold">Email (Immutable)</label>
-            <input type="email" class="form-control bg-transparent text-muted opacity-50" [value]="user.email" disabled>
-          </div>
-
-          <div class="mb-4">
-            <label class="form-label text-muted small fw-bold">Bio / Culinary Philosophy</label>
-            <textarea class="form-control" [(ngModel)]="user.bio" name="bio" rows="3" placeholder="I live for the perfect karahi..."></textarea>
-          </div>
-
-          <button type="submit" class="btn btn-primary-custom w-100 fw-bold py-2 shadow-lg">
-            Synchronize Profile <i class="fa-solid fa-rotate ms-2"></i>
-          </button>
-        </form>
-      </div>
-
-      <!-- Security Protocol -->
-      <div class="glass-panel p-4 mb-5 border-danger border-opacity-25" style="background: rgba(220, 38, 38, 0.02);">
-        <h4 class="fw-bold mb-3" style="color: var(--text-color);"><i class="fa-solid fa-shield-halved text-danger me-2"></i>Security Protocol</h4>
-        <p class="small text-muted mb-4">Ensure your account remains fortified with periodic credential updates.</p>
-        <div class="input-group mb-3">
-          <input type="password" class="form-control border-end-0" placeholder="Enter new master password" #newPass>
-          <button class="btn btn-outline-danger px-4" (click)="updatePassword(newPass.value); newPass.value=''">
-            Fortify
-          </button>
-        </div>
-      </div>
-
-      <!-- Loyalty & Assets -->
-      <div class="glass-panel p-4 mb-5" style="background: linear-gradient(135deg, rgba(220, 38, 38, 0.05), transparent);">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <h4 class="fw-bold mb-0" style="color: var(--text-color);">FitHae Assets</h4>
-          <span class="badge bg-danger p-2 px-4 fs-6 shadow-sm">
-            <i class="fa-solid fa-coins me-2"></i>{{ user.fitHaeTokens }} Tokens
-          </span>
-        </div>
-        <button class="btn btn-primary-custom w-100 py-2 mb-3" (click)='redeemTokens()' [disabled]="user.fitHaeTokens < 1">
-          EXCHANGE 1 TOKEN FOR 15% COUPON
-        </button>
-
-        <div *ngIf="redeemedCoupon" class="mt-3 p-3 rounded glass-panel border-success animate-fade-in shadow-inner">
-          <h6 class="text-success fw-bold mb-2"><i class="fa-solid fa-check-circle me-2"></i>Asset Generated</h6>
-          <p style="color: var(--text-color);" class="mb-3 small">Voucher ID: <span class="fw-bold font-monospace">{{ redeemedCoupon.couponId }}</span></p>
-          <button class="btn btn-success btn-sm w-100 rounded-pill fw-bold" (click)="downloadCoupon(redeemedCoupon.couponId)">
-            <i class="fa-solid fa-download me-1"></i> DOWNLOAD PASS
-          </button>
-        </div>
-      </div>
-
-      <div class="d-grid mb-5">
-        <button class="btn btn-outline-secondary fw-bold py-3 rounded-pill" (click)="authService.logout()">
-          TERMINATE SESSION <i class="fa-solid fa-power-off ms-2"></i>
-        </button>
-      </div>
-
-      <!-- Submission History -->
-      <div class="submission-tracker mb-5">
-        <h4 class="fw-bold mb-4" style="color: var(--text-color);"><i class="fa-solid fa-folder-open text-primary me-2"></i>Submission Audit</h4>
-        <div *ngIf="submissions.length === 0" class="text-center py-5 border-dashed rounded opacity-50">
-          <p style="color: var(--text-muted);">No active submissions found.</p>
-        </div>
-        <div class="list-group list-group-flush">
-          <div *ngFor="let res of submissions" class="list-group-item bg-transparent border-0 py-3 px-0 border-bottom border-white border-opacity-10">
-            <div class="d-flex justify-content-between align-items-center">
+          <!-- Submission Tracker -->
+          <h4 class="fw-bold mb-4 mt-5" style="color: var(--text-color);"><i class="fa-solid fa-map-location-dot text-primary me-2"></i>Submission Audit</h4>
+          <div class="submission-list glass-panel overflow-auto" style="max-height: 300px;">
+            <div *ngIf="submissions.length === 0" class="text-center py-5 opacity-50">
+              <p class="small m-0">No submissions yet.</p>
+            </div>
+            <div *ngFor="let res of submissions" class="p-3 border-bottom border-white border-opacity-10 d-flex justify-content-between align-items-center">
               <div>
-                <h6 class="fw-bold mb-1" style="color: var(--text-color);">{{ res.name }}</h6>
-                <p class="small text-muted mb-0">{{ res.location }}</p>
+                <h6 class="fw-bold mb-0 x-small" style="color: var(--text-color);">{{ res.name }}</h6>
+                <p class="x-small text-muted mb-0">{{ res.location }}</p>
               </div>
-              <span class="badge rounded-pill px-3 py-2 shadow-sm" 
+              <span class="badge x-small px-2 py-1" 
                     [ngClass]="{
                       'bg-warning text-dark': res.status === 'Pending Review',
                       'bg-success': res.status === 'Approved',
                       'bg-danger': res.status === 'Rejected'
-                    }">
-                {{ res.status }}
-              </span>
+                    }">{{ res.status }}</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- User Review History -->
-      <div class="review-history mt-5 pt-4 border-top border-white border-opacity-10">
-        <h4 class="fw-bold mb-4" style="color: var(--text-color);"><i class="fa-solid fa-star text-warning me-2"></i>My Review Archive</h4>
-        <div *ngIf="userReviews.length === 0" class="text-center py-5 border-dashed rounded opacity-50">
-          <p style="color: var(--text-muted);">You haven't shared any culinary reviews yet.</p>
+      <!-- User Review History (Full Width) -->
+      <div class="mt-5 pt-5 border-top border-white border-opacity-10">
+        <h4 class="fw-bold mb-4" style="color: var(--text-color);"><i class="fa-solid fa-star text-warning me-2"></i>Review Archive</h4>
+        <div *ngIf="userReviews.length === 0" class="text-center py-5 opacity-50">
+          <p style="color: var(--text-muted);">Your culinary journey awaits its first review.</p>
         </div>
         <div class="row g-3">
-          <div class="col-12" *ngFor="let review of userReviews">
-            <div class="glass-panel p-3 border-0 shadow-sm animate-fade-in">
+          <div class="col-md-6" *ngFor="let review of userReviews">
+            <div class="glass-panel p-3 border-0 shadow-sm animate-fade-in h-100">
               <div class="d-flex justify-content-between align-items-start mb-2">
                 <div>
-                  <h6 class="fw-bold m-0" style="color: var(--text-color);">{{ review.restaurant?.name || 'Unknown Spot' }}</h6>
-                  <p class="x-small text-muted mb-0"><i class="fa-solid fa-location-dot me-1"></i> {{ review.restaurant?.location || 'Unknown Location' }}</p>
+                  <h6 class="fw-bold m-0" style="color: var(--text-color);">{{ review.restaurant?.name }}</h6>
+                  <p class="x-small text-muted mb-0">{{ review.restaurant?.location }}</p>
                 </div>
-                <div class="d-flex gap-1">
-                  <i class="fa-solid fa-star text-warning x-small" *ngFor="let s of [1,2,3,4,5]" [class.opacity-25]="s > review.rating"></i>
+                <div class="d-flex gap-1 text-warning x-small">
+                  <i class="fa-solid fa-star" *ngFor="let s of [1,2,3,4,5]" [class.opacity-25]="s > review.rating"></i>
                 </div>
               </div>
               <p class="small fst-italic mb-0" style="color: var(--text-muted);">"{{ review.comment }}"</p>
-              <p class="x-small text-end opacity-50 mt-2 mb-0" style="color: var(--text-color);">{{ review.date | date:'mediumDate' }}</p>
             </div>
           </div>
         </div>
+      </div>
+
+      <div class="text-center mt-5 pt-4">
+        <button class="btn btn-link text-muted text-decoration-none small" (click)="authService.logout()">
+          <i class="fa-solid fa-power-off me-1"></i> Terminate Session Securely
+        </button>
       </div>
 
     </div>
