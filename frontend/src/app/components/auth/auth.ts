@@ -195,7 +195,7 @@ export class AuthComponent implements OnInit, AfterViewInit, OnDestroy {
         next: () => {
           this.isLoginMode = true; 
           this.isLoading = false;
-          alert('Account created! Default Admin: admin@fithae.com / Admin@123');
+          alert('Account created successfully! Please log in to continue.');
         },
         error: (err) => {
           this.error = err.error.message || 'Signup failed.';
