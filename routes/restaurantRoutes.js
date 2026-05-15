@@ -269,42 +269,61 @@ router.get('/:id/qr', auth, isAdmin, async (req, res) => {
         const canvas = createCanvas(width, height);
         const ctx = canvas.getContext('2d');
 
-        // Background
-        ctx.fillStyle = '#0f0f0f';
+        // Background Gradient
+        const grad = ctx.createLinearGradient(0, 0, width, height);
+        grad.addColorStop(0, '#0f0f0f');
+        grad.addColorStop(1, '#1a1a1a');
+        ctx.fillStyle = grad;
         ctx.fillRect(0, 0, width, height);
 
-        // Border
+        // Border - Sleek Double Border
         ctx.strokeStyle = '#d32f2f';
-        ctx.lineWidth = 10;
-        ctx.strokeRect(5, 5, width - 10, height - 10);
+        ctx.lineWidth = 4;
+        ctx.strokeRect(15, 15, width - 30, height - 30);
+        ctx.strokeStyle = 'rgba(211, 47, 47, 0.3)';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(20, 20, width - 40, height - 40);
 
-        // Header Text
+        // Header Text - FitHae Branding
         ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 36px Arial';
+        ctx.font = 'bold 42px sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText('FitHae', width / 2, 60);
+        ctx.fillText('FitHae', width / 2, 80);
 
         ctx.fillStyle = '#d32f2f';
-        ctx.font = '24px Arial';
-        ctx.fillText('Review Card', width / 2, 95);
+        ctx.font = '700 18px sans-serif';
+        ctx.fillText('OFFICIAL REVIEW ASSET', width / 2, 110);
 
-        // Restaurant Name
+        // Restaurant Name Section
+        ctx.fillStyle = 'rgba(255,255,255,0.05)';
+        ctx.fillRect(40, 140, width - 80, 80);
+        
         ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 28px Arial';
-        ctx.fillText(restaurant.name, width / 2, 160);
+        ctx.font = 'bold 28px sans-serif';
+        ctx.fillText(restaurant.name.toUpperCase(), width / 2, 185);
 
-        // QR Code
+        // QR Code - With White Rounded Background for better scanability
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.roundRect(width / 2 - 110, 240, 220, 220, 20);
+        ctx.fill();
+
         const qrImage = await loadImage(qrDataUrl);
-        ctx.drawImage(qrImage, width / 2 - 100, 200, 200, 200);
+        ctx.drawImage(qrImage, width / 2 - 100, 250, 200, 200);
 
-        // Footer Text
-        ctx.fillStyle = '#aaaaaa';
-        ctx.font = '16px Arial';
-        ctx.fillText('Scan to Rate & Review', width / 2, 430);
-
+        // Footer Instructions
         ctx.fillStyle = '#ffffff';
-        ctx.font = 'italic 18px Arial';
-        ctx.fillText('Fit Hai Boss!', width / 2, 530);
+        ctx.font = 'bold 20px sans-serif';
+        ctx.fillText('SCAN TO RATE', width / 2, 500);
+
+        ctx.fillStyle = '#888888';
+        ctx.font = '14px sans-serif';
+        ctx.fillText('Earn tokens for every review!', width / 2, 525);
+
+        // Signature
+        ctx.fillStyle = '#d32f2f';
+        ctx.font = 'italic bold 24px sans-serif';
+        ctx.fillText('Fit Hai Boss!', width / 2, 570);
 
         // Stream the result
         const buffer = canvas.toBuffer('image/png');
