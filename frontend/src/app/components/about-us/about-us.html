@@ -8,37 +8,36 @@
 
 <div class="row g-5 justify-content-center px-4">
   <div class="col-md-4" *ngFor="let founder of founders">
-    <div class="flip-card">
-      <div class="flip-card-inner shadow-2xl">
-        <!-- Front Side -->
-        <div class="flip-card-front glass-panel p-5 overflow-hidden">
-          <div class="mb-4 position-relative">
-            <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center shadow-lg border border-white border-opacity-10" 
-                 style="width: 180px; height: 180px; background: var(--glass-bg); overflow: hidden;">
-              <img *ngIf="founder.image" [src]="founder.image" class="w-100 h-100 object-fit-cover" 
-                   (error)="founder.image = ''" alt="Founder">
-              <i *ngIf="!founder.image" class="fa-solid fa-user-tie fa-5x opacity-50" style="color: var(--accent-red)"></i>
-            </div>
-          </div>
-          <h3 class="fw-bold mb-1" style="color: var(--text-color);">{{ founder.name }}</h3>
-          <h6 class="mb-3 fw-bold text-uppercase tracking-wider" style="color: var(--accent-red); font-size: 0.8rem;">{{ founder.role }}</h6>
-          <div class="mt-4 pt-3 border-top border-white border-opacity-10 w-100">
-             <p class="text-muted small m-0"><i class="fa-solid fa-arrow-rotate-right me-2 animate-spin-slow"></i> Hover to Discover</p>
-          </div>
+    <div class="founder-card glass-panel shadow-2xl overflow-hidden">
+      <!-- Image & Identity -->
+      <div class="founder-header p-5 text-center">
+        <div class="founder-image-container mb-4 mx-auto shadow-lg">
+          <img *ngIf="founder.image" [src]="founder.image" class="w-100 h-100 object-fit-cover" 
+               (error)="founder.image = ''" alt="Founder">
+          <i *ngIf="!founder.image" class="fa-solid fa-user-tie fa-5x opacity-50" style="color: var(--accent-red)"></i>
         </div>
-        <!-- Back Side -->
-        <div class="flip-card-back p-5 text-center">
-          <div class="mb-4">
-            <i class="fa-solid fa-quote-left fa-2x opacity-25 mb-3"></i>
-            <h4 class="fw-bold text-white mb-3">Executive Vision</h4>
-            <p class="card-text mb-4 text-white opacity-90 fst-italic">{{ founder.bio }}</p>
-          </div>
-          <div class="mt-auto">
-            <a [href]="founder.linkedin" target="_blank" class="btn btn-light rounded-pill px-5 py-2 fw-bold shadow-sm transition-transform">
-              <i class="fa-brands fa-linkedin me-2 text-primary"></i> CONNECT
+        <h3 class="fw-bold mb-1" style="color: var(--text-color);">{{ founder.name }}</h3>
+        <h6 class="mb-0 fw-bold text-uppercase tracking-wider" style="color: var(--accent-red); font-size: 0.8rem;">{{ founder.role }}</h6>
+      </div>
+
+      <!-- Expandable Details -->
+      <div class="founder-details-wrapper">
+        <div class="founder-details p-5 pt-0 text-center">
+          <div class="pt-4 border-top border-white border-opacity-10">
+            <i class="fa-solid fa-quote-left fa-2x opacity-25 mb-3 text-danger"></i>
+            <h5 class="fw-bold text-uppercase small tracking-widest mb-3" style="color: var(--text-color);">Executive Vision</h5>
+            <p class="card-text mb-4 fst-italic" style="color: var(--text-muted); font-size: 0.95rem;">{{ founder.bio }}</p>
+            
+            <a [href]="founder.linkedin" target="_blank" class="btn btn-primary-custom rounded-pill px-5 py-2 fw-bold shadow-sm">
+              <i class="fa-brands fa-linkedin me-2"></i> CONNECT
             </a>
           </div>
         </div>
+      </div>
+
+      <!-- Interaction Indicator -->
+      <div class="interaction-hint py-2 text-center small opacity-50" style="background: rgba(220, 38, 38, 0.05); color: var(--text-color);">
+        <i class="fa-solid fa-chevron-down animate-bounce"></i> HOVER TO EXPAND
       </div>
     </div>
   </div>
