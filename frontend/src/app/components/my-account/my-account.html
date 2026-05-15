@@ -84,8 +84,8 @@
       </div>
 
       <!-- Submission History -->
-      <div class="submission-tracker">
-        <h4 class="fw-bold mb-4" style="color: var(--text-color);">Submission Audit</h4>
+      <div class="submission-tracker mb-5">
+        <h4 class="fw-bold mb-4" style="color: var(--text-color);"><i class="fa-solid fa-folder-open text-primary me-2"></i>Submission Audit</h4>
         <div *ngIf="submissions.length === 0" class="text-center py-5 border-dashed rounded opacity-50">
           <p style="color: var(--text-muted);">No active submissions found.</p>
         </div>
@@ -104,6 +104,31 @@
                     }">
                 {{ res.status }}
               </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Review History -->
+      <div class="review-history mt-5 pt-4 border-top border-white border-opacity-10">
+        <h4 class="fw-bold mb-4" style="color: var(--text-color);"><i class="fa-solid fa-star text-warning me-2"></i>My Review Archive</h4>
+        <div *ngIf="userReviews.length === 0" class="text-center py-5 border-dashed rounded opacity-50">
+          <p style="color: var(--text-muted);">You haven't shared any culinary reviews yet.</p>
+        </div>
+        <div class="row g-3">
+          <div class="col-12" *ngFor="let review of userReviews">
+            <div class="glass-panel p-3 border-0 shadow-sm animate-fade-in">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                  <h6 class="fw-bold m-0" style="color: var(--text-color);">{{ review.restaurant?.name || 'Unknown Spot' }}</h6>
+                  <p class="x-small text-muted mb-0"><i class="fa-solid fa-location-dot me-1"></i> {{ review.restaurant?.location || 'Unknown Location' }}</p>
+                </div>
+                <div class="d-flex gap-1">
+                  <i class="fa-solid fa-star text-warning x-small" *ngFor="let s of [1,2,3,4,5]" [class.opacity-25]="s > review.rating"></i>
+                </div>
+              </div>
+              <p class="small fst-italic mb-0" style="color: var(--text-muted);">"{{ review.comment }}"</p>
+              <p class="x-small text-end opacity-50 mt-2 mb-0" style="color: var(--text-color);">{{ review.date | date:'mediumDate' }}</p>
             </div>
           </div>
         </div>

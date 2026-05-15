@@ -74,4 +74,21 @@ router.get('/:restaurantId', async (req, res) => {
     }
 });
 
+// GET all reviews by the current logged-in user
+router.get('/user/me', auth, async (req, res) => {
+    try {
+        const reviews = await Review.find({ userId: req.user.id })
+            .sort({ date: -1 });
+        
+        const populatedReviews = await Promise.all(reviews.map(async (rev) => {
+            const restaurant = await Restaurant.findById(rev.restaurantId).select('name location');
+            return { ...rev.toObject(), restaurant };
+        }));
+
+        res.json(populatedReviews);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
 module.exports = router;

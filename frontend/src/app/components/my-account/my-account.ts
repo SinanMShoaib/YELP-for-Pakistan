@@ -15,6 +15,7 @@ import { HttpClient } from '@angular/common/http';
 export class MyAccountComponent implements OnInit {
   user: any = { name: '', username: '', email: '', bio: '', role: '', fitHaeTokens: 0 };
   submissions: any[] = [];
+  userReviews: any[] = [];
   message: string = '';
   isError: boolean = false;
   redeemedCoupon: any = null;
@@ -28,6 +29,7 @@ export class MyAccountComponent implements OnInit {
   ngOnInit() {
     this.loadUserData();
     this.loadSubmissions();
+    this.loadUserReviews();
   }
 
   loadUserData() {
@@ -41,6 +43,13 @@ export class MyAccountComponent implements OnInit {
     this.api.getUserSubmissions().subscribe({
       next: (data) => this.submissions = data,
       error: (err) => console.error("Failed to fetch submissions")
+    });
+  }
+
+  loadUserReviews() {
+    this.http.get<any[]>('/api/reviews/user/me').subscribe({
+      next: (data) => this.userReviews = data,
+      error: (err) => console.error("Failed to fetch user reviews")
     });
   }
 

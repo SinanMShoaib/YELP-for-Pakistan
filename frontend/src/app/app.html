@@ -55,7 +55,8 @@
           <div class="dropdown">
             <button class="btn btn-outline-secondary rounded-pill d-flex align-items-center gap-2 px-3 dropdown-toggle" 
                     type="button" data-bs-toggle="dropdown" style="background: var(--input-bg); color: var(--text-color); border-color: var(--glass-border)">
-              <i class="fa-solid fa-user-circle"></i> {{ authService.getUserName() }}
+              <i class="fa-solid fa-user-circle"></i> 
+              <span class="fw-bold cursor-pointer" routerLink="/my-account" style="text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(220, 38, 38, 0.3);">{{ authService.getUserName() }}</span>
             </button>
             <ul class="dropdown-menu dropdown-menu-end glass-panel mt-2 p-2">
               <li><a class="dropdown-item rounded" routerLink="/my-account"><i class="fa-solid fa-gear me-2"></i>My Account</a></li>
