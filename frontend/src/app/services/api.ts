@@ -57,4 +57,9 @@ export class ApiService {
   getQrCode(id: string): Observable<Blob> {
     return this.http.get(`/api/restaurants/${id}/qr`, { responseType: 'blob' });
   }
+
+  // Admin Coupon History
+  getAllCoupons(): Observable<any> {
+    return this.http.get('/api/coupons/admin/all');
+  }
 }

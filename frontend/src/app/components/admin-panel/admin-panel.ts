@@ -12,7 +12,9 @@ import { ApiService } from '../../services/api';
 export class AdminPanelComponent implements OnInit {
   pendingRestaurants: any[] = [];
   approvedRestaurants: any[] = [];
+  coupons: any[] = [];
   message: string = '';
+  activeTab: 'pending' | 'approved' | 'coupons' = 'pending';
   
   // Advanced Dashboard Stats
   stats = {
@@ -27,6 +29,11 @@ export class AdminPanelComponent implements OnInit {
   ngOnInit() {
     this.loadPending();
     this.loadApproved();
+    this.loadCoupons();
+  }
+
+  setTab(tab: 'pending' | 'approved' | 'coupons') {
+    this.activeTab = tab;
   }
 
   loadPending() {
@@ -52,6 +59,16 @@ export class AdminPanelComponent implements OnInit {
     this.api.getRestaurants({}).subscribe({
       next: (data) => this.approvedRestaurants = data.filter((r: any) => r.status === 'Approved'),
       error: (err) => console.error("Failed to load approved restaurants")
+    });
+  }
+
+  loadCoupons() {
+    this.api.getAllCoupons().subscribe({
+      next: (data) => {
+        this.coupons = data;
+        this.stats.liveCoupons = this.coupons.filter(c => c.status === 'Active').length;
+      },
+      error: (err) => console.error("Failed to load coupons", err)
     });
   }
 

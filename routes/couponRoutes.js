@@ -215,4 +215,25 @@ router.get('/verify/:couponId', async (req, res) => {
     }
 });
 
+// --- ADMIN ---
+const isAdmin = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (user && user.role === 'admin') next();
+        else res.status(403).json({ message: "Access denied. Admin only." });
+    } catch (err) { res.status(500).json({ message: err.message }); }
+};
+
+// GET all coupons for Admin History Tab
+router.get('/admin/all', auth, isAdmin, async (req, res) => {
+    try {
+        const coupons = await Coupon.find()
+            .populate('userId', 'name username email profileImage')
+            .sort({ createdAt: -1 }); // Newest first
+        res.json(coupons);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
 module.exports = router;

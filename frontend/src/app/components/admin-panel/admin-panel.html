@@ -59,65 +59,106 @@
   </div>
 </div>
 
-<!-- Pending Section -->
-<div class="row mb-4">
-  <div class="col-12">
-    <h3 class="fw-bold mb-4" style="color: var(--text-color);">
-      <span class="badge bg-warning me-2" style="width: 12px; height: 12px; display: inline-block; border-radius: 50%;"></span>
+<!-- Navigation Tabs -->
+<ul class="nav nav-pills mb-4 gap-2 border-bottom border-white border-opacity-10 pb-3">
+  <li class="nav-item">
+    <button class="nav-link rounded-pill px-4 fw-bold" [class.active]="activeTab === 'pending'" [class.bg-danger]="activeTab === 'pending'" [class.text-white]="activeTab === 'pending'" style="color: var(--text-color);" (click)="setTab('pending')">
       Queue Management
-    </h3>
-  </div>
-</div>
+    </button>
+  </li>
+  <li class="nav-item">
+    <button class="nav-link rounded-pill px-4 fw-bold" [class.active]="activeTab === 'approved'" [class.bg-success]="activeTab === 'approved'" [class.text-white]="activeTab === 'approved'" style="color: var(--text-color);" (click)="setTab('approved')">
+      Branded Assets
+    </button>
+  </li>
+  <li class="nav-item">
+    <button class="nav-link rounded-pill px-4 fw-bold" [class.active]="activeTab === 'coupons'" [class.bg-primary]="activeTab === 'coupons'" [class.text-white]="activeTab === 'coupons'" style="color: var(--text-color);" (click)="setTab('coupons')">
+      Coupon History
+    </button>
+  </li>
+</ul>
 
-<div class="row g-4" *ngIf="pendingRestaurants.length > 0; else noPending">
-  <div class="col-md-6 col-lg-4" *ngFor="let res of pendingRestaurants">
-    <div class="card glass-panel h-100 border-0 overflow-hidden">
-      <div class="position-relative">
-        <img [src]="res.imageUrl || 'assets/default-restaurant.jpg'" class="card-img-top" style="height: 180px; object-fit: cover;" alt="Restaurant Image">
-        <div class="position-absolute bottom-0 start-0 p-3 w-100" style="background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);">
-          <h5 class="text-white fw-bold mb-0">{{ res.name }}</h5>
+<!-- Pending Section -->
+<div *ngIf="activeTab === 'pending'">
+  <div class="row g-4" *ngIf="pendingRestaurants.length > 0; else noPending">
+    <div class="col-md-6 col-lg-4" *ngFor="let res of pendingRestaurants">
+      <div class="card glass-panel h-100 border-0 overflow-hidden">
+        <div class="position-relative">
+          <img [src]="res.imageUrl || 'assets/default-restaurant.jpg'" class="card-img-top" style="height: 180px; object-fit: cover;" alt="Restaurant Image">
+          <div class="position-absolute bottom-0 start-0 p-3 w-100" style="background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);">
+            <h5 class="text-white fw-bold mb-0">{{ res.name }}</h5>
+          </div>
         </div>
-      </div>
-      <div class="card-body">
-        <p class="card-text small mb-2" style="color: var(--text-muted);"><i class="fa-solid fa-location-dot text-danger me-1"></i> {{ res.location }}</p>
-        <p class="card-text small mb-3" style="color: var(--text-muted);">Contributor: <span class="fw-bold text-primary">{{ res.addedBy?.userName || res.addedBy?.name || 'Explorer' }}</span></p>
-        
-        <div class="d-flex gap-2">
-          <button class="btn btn-success flex-grow-1 fw-bold rounded-pill" (click)="handleAction(res._id, 'approve')">Approve</button>
-          <button class="btn btn-outline-danger flex-grow-1 fw-bold rounded-pill" (click)="handleAction(res._id, 'reject')">Reject</button>
+        <div class="card-body">
+          <p class="card-text small mb-2" style="color: var(--text-muted);"><i class="fa-solid fa-location-dot text-danger me-1"></i> {{ res.location }}</p>
+          <p class="card-text small mb-3" style="color: var(--text-muted);">Contributor: <span class="fw-bold text-primary">{{ res.addedBy?.userName || res.addedBy?.name || 'Explorer' }}</span></p>
+          
+          <div class="d-flex gap-2">
+            <button class="btn btn-success flex-grow-1 fw-bold rounded-pill" (click)="handleAction(res._id, 'approve')">Approve</button>
+            <button class="btn btn-outline-danger flex-grow-1 fw-bold rounded-pill" (click)="handleAction(res._id, 'reject')">Reject</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<ng-template #noPending>
-  <div class="text-center py-5 glass-panel border-dashed">
-    <i class="fa-solid fa-check-double fa-3x mb-3 text-muted"></i>
-    <p style="color: var(--text-muted);">Queue is empty. No pending reviews.</p>
-  </div>
-</ng-template>
+  <ng-template #noPending>
+    <div class="text-center py-5 glass-panel border-dashed">
+      <i class="fa-solid fa-check-double fa-3x mb-3 text-muted"></i>
+      <p style="color: var(--text-muted);">Queue is empty. No pending reviews.</p>
+    </div>
+  </ng-template>
+</div>
 
 <!-- Approved Section -->
-<div class="row mt-5 pt-4 mb-4">
-  <div class="col-12">
-    <h3 class="fw-bold mb-4" style="color: var(--text-color);">
-      <span class="badge bg-success me-2" style="width: 12px; height: 12px; display: inline-block; border-radius: 50%;"></span>
-      Branded Asset Generation
-    </h3>
+<div *ngIf="activeTab === 'approved'">
+  <div class="row g-3">
+    <div class="col-md-4 col-lg-3" *ngFor="let res of approvedRestaurants">
+      <div class="glass-panel p-3 text-center border-opacity-50">
+        <div class="qr-preview mb-3 mx-auto d-flex align-items-center justify-content-center" style="background: var(--input-bg); width: 100px; height: 100px; border-radius: 12px; border: 2px dashed var(--glass-border);">
+          <i class="fa-solid fa-qrcode fa-3x text-muted opacity-50"></i>
+        </div>
+        <h6 class="fw-bold text-truncate mb-3" style="color: var(--text-color);">{{ res.name }}</h6>
+        <button class="btn btn-sm btn-primary-custom w-100 rounded-pill" (click)="downloadQr(res._id, res.name)">
+          <i class="fa-solid fa-download me-1"></i> Download Card
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 
-<div class="row g-3">
-  <div class="col-md-4 col-lg-3" *ngFor="let res of approvedRestaurants">
-    <div class="glass-panel p-3 text-center border-opacity-50">
-      <div class="qr-preview mb-3 mx-auto d-flex align-items-center justify-content-center" style="background: var(--input-bg); width: 100px; height: 100px; border-radius: 12px; border: 2px dashed var(--glass-border);">
-        <i class="fa-solid fa-qrcode fa-3x text-muted opacity-50"></i>
-      </div>
-      <h6 class="fw-bold text-truncate mb-3" style="color: var(--text-color);">{{ res.name }}</h6>
-      <button class="btn btn-sm btn-primary-custom w-100 rounded-pill" (click)="downloadQr(res._id, res.name)">
-        <i class="fa-solid fa-download me-1"></i> Download Card
-      </button>
-    </div>
+<!-- Coupons Section -->
+<div *ngIf="activeTab === 'coupons'">
+  <div class="glass-panel p-4 overflow-auto">
+    <table class="table table-hover align-middle mb-0" style="color: var(--text-color); --bs-table-bg: transparent; --bs-table-color: var(--text-color);">
+      <thead>
+        <tr>
+          <th scope="col" class="border-bottom border-white border-opacity-10 text-muted small text-uppercase">Coupon ID</th>
+          <th scope="col" class="border-bottom border-white border-opacity-10 text-muted small text-uppercase">Redeemed By</th>
+          <th scope="col" class="border-bottom border-white border-opacity-10 text-muted small text-uppercase">Issued Date</th>
+          <th scope="col" class="border-bottom border-white border-opacity-10 text-muted small text-uppercase text-end">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let coupon of coupons">
+          <td class="fw-bold font-monospace border-white border-opacity-10">{{ coupon.couponId }}</td>
+          <td class="border-white border-opacity-10">
+            <div class="d-flex align-items-center gap-2">
+              <i class="fa-solid fa-circle-user text-muted"></i>
+              <span>{{ coupon.userId?.name || coupon.userId?.username || 'Unknown' }}</span>
+            </div>
+          </td>
+          <td class="border-white border-opacity-10 text-muted small">{{ coupon.createdAt | date:'mediumDate' }}</td>
+          <td class="border-white border-opacity-10 text-end">
+            <span class="badge rounded-pill" [ngClass]="coupon.status === 'Active' ? 'bg-success bg-opacity-25 text-success border border-success border-opacity-25' : 'bg-secondary bg-opacity-25 text-secondary border border-secondary border-opacity-25'">
+              {{ coupon.status }}
+            </span>
+          </td>
+        </tr>
+        <tr *ngIf="coupons.length === 0">
+          <td colspan="4" class="text-center py-4 text-muted border-0">No coupons have been redeemed yet.</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
