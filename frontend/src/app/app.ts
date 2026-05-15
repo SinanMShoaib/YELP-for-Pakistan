@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 export class App implements OnInit, OnDestroy {
   protected readonly title = signal('FitHae');
   currentTimePKT = signal('');
-  isDarkMode = signal(false); // Default to Light Mode
+  isDarkMode = signal(true); // Default to Dark Mode to match new aesthetics
   private timer: any;
 
   // Custom Cursor
@@ -29,11 +29,9 @@ export class App implements OnInit, OnDestroy {
     this.timer = setInterval(() => this.updateTime(), 1000);
     
     // Check initial theme
-    const theme = localStorage.getItem('theme') || 'light';
-    if (theme === 'dark') {
-      this.isDarkMode.set(true);
-      document.body.setAttribute('data-theme', 'dark');
-    }
+    const theme = localStorage.getItem('theme') || 'dark';
+    this.isDarkMode.set(theme === 'dark');
+    document.body.setAttribute('data-theme', theme);
 
     // Mouse Tracking
     window.addEventListener('mousemove', (e) => {
@@ -63,13 +61,9 @@ export class App implements OnInit, OnDestroy {
 
   toggleTheme() {
     this.isDarkMode.update(v => !v);
-    if (this.isDarkMode()) {
-      document.body.setAttribute('data-theme', 'dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.body.removeAttribute('data-theme');
-      localStorage.setItem('theme', 'light');
-    }
+    const newTheme = this.isDarkMode() ? 'dark' : 'light';
+    document.body.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
   }
 
   get isAdmin() {
