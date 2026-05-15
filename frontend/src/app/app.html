@@ -69,15 +69,14 @@
           </button>
         </div>
       </ul>
-        </button>
-      </div>
     </div>
   </div>
 </nav>
 
-<div class="container pb-5">
+<!-- Main Discovery Portal -->
+<main class="container-fluid px-4 pb-5 position-relative" style="z-index: 10;">
   <router-outlet></router-outlet>
-</div>
+</main>
 
 <!-- Custom Cursor Elements -->
 <div class="custom-cursor" [style.transform]="'translate(' + cursorX + 'px, ' + cursorY + 'px)'"></div>
