@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 export class App implements OnInit, OnDestroy {
   protected readonly title = signal('FitHae');
   currentTimePKT = signal('');
-  isDarkMode = signal(true); // Default to Dark Mode to match new aesthetics
+  isDarkMode = signal(false); // Default to Light Mode
   private timer: any;
 
   // Custom Cursor
@@ -29,7 +29,7 @@ export class App implements OnInit, OnDestroy {
     this.timer = setInterval(() => this.updateTime(), 1000);
     
     // Check initial theme
-    const theme = localStorage.getItem('theme') || 'dark';
+    const theme = localStorage.getItem('theme') || 'light';
     this.isDarkMode.set(theme === 'dark');
     document.body.setAttribute('data-theme', theme);
 

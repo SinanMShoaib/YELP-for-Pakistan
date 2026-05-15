@@ -1,0 +1,27 @@
+.floating-animation {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+  100% { transform: translateY(0px); }
+}
+
+.hover-zoom {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover .hover-zoom {
+  transform: scale(1.1);
+}
+
+.category-card:hover {
+  transform: translateY(-10px);
+  background: var(--glass-bg);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+
+.tracking-widest {
+  letter-spacing: 0.15em;
+}

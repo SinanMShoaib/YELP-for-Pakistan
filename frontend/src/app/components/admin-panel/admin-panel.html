@@ -1,30 +1,41 @@
-<div class="row mb-4">
+<div class="row mb-5">
   <div class="col-12 text-center">
-    <h2 class="display-5 fw-bold" style="color: var(--text-color);">Admin <span style="color: var(--accent-red)">Panel</span></h2>
-    <p class="lead" style="color: var(--text-muted);">Review pending restaurant submissions</p>
+    <div class="badge rounded-pill bg-danger bg-opacity-10 text-danger px-3 py-2 mb-3 fw-bold">Admin Authority</div>
+    <h1 class="display-4 fw-bold" style="color: var(--text-color);">Operations <span style="color: var(--accent-red)">Hub</span></h1>
+    <p class="lead" style="color: var(--text-muted);">Manage submissions and generate enterprise review assets.</p>
   </div>
 </div>
 
-<div *ngIf="message" class="alert glass-panel mb-4 text-center text-primary">
-  {{ message }}
+<div *ngIf="message" class="alert glass-panel mb-4 text-center text-primary animate-fade-in shadow-lg border-primary border-opacity-25">
+  <i class="fa-solid fa-circle-info me-2"></i> {{ message }}
+</div>
+
+<!-- Pending Section -->
+<div class="row mb-4">
+  <div class="col-12">
+    <h3 class="fw-bold mb-4" style="color: var(--text-color);">
+      <span class="badge bg-warning me-2" style="width: 12px; height: 12px; display: inline-block; border-radius: 50%;"></span>
+      Pending Approvals ({{ pendingRestaurants.length }})
+    </h3>
+  </div>
 </div>
 
 <div class="row g-4" *ngIf="pendingRestaurants.length > 0; else noPending">
   <div class="col-md-6 col-lg-4" *ngFor="let res of pendingRestaurants">
-    <div class="card glass-panel h-100 border-0 p-3">
-      <img [src]="res.imageUrl || 'assets/default-restaurant.jpg'" class="card-img-top rounded mb-3" style="height: 200px; object-fit: cover;" alt="Restaurant Image">
-      <div class="card-body p-0 d-flex flex-column">
-        <h5 class="card-title fw-bold" style="color: var(--text-color);">{{ res.name }}</h5>
+    <div class="card glass-panel h-100 border-0 overflow-hidden">
+      <div class="position-relative">
+        <img [src]="res.imageUrl || 'assets/default-restaurant.jpg'" class="card-img-top" style="height: 180px; object-fit: cover;" alt="Restaurant Image">
+        <div class="position-absolute bottom-0 start-0 p-3 w-100" style="background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);">
+          <h5 class="text-white fw-bold mb-0">{{ res.name }}</h5>
+        </div>
+      </div>
+      <div class="card-body">
         <p class="card-text small mb-2" style="color: var(--text-muted);"><i class="fa-solid fa-location-dot text-danger me-1"></i> {{ res.location }}</p>
-        <p class="card-text small mb-3" style="color: var(--text-muted);">Added By: <span class="fw-bold">{{ res.addedBy?.userName || 'Unknown' }}</span></p>
+        <p class="card-text small mb-3" style="color: var(--text-muted);">Contributor: <span class="fw-bold text-primary">{{ res.addedBy?.userName || 'Unknown' }}</span></p>
         
-        <div class="mt-auto d-flex gap-2">
-          <button class="btn btn-success flex-grow-1 fw-bold rounded-pill shadow-sm" (click)="handleAction(res._id, 'approve')">
-            <i class="fa-solid fa-check me-1"></i> Approve
-          </button>
-          <button class="btn btn-danger flex-grow-1 fw-bold rounded-pill shadow-sm" (click)="handleAction(res._id, 'reject')">
-            <i class="fa-solid fa-xmark me-1"></i> Reject
-          </button>
+        <div class="d-flex gap-2">
+          <button class="btn btn-success flex-grow-1 fw-bold rounded-pill" (click)="handleAction(res._id, 'approve')">Approve</button>
+          <button class="btn btn-outline-danger flex-grow-1 fw-bold rounded-pill" (click)="handleAction(res._id, 'reject')">Reject</button>
         </div>
       </div>
     </div>
@@ -32,33 +43,32 @@
 </div>
 
 <ng-template #noPending>
-  <div class="text-center py-5 glass-panel">
-    <i class="fa-solid fa-clipboard-check fa-4x mb-3 text-success"></i>
-    <h3 style="color: var(--text-color);">All Caught Up!</h3>
-    <p style="color: var(--text-muted);">There are no pending restaurants to review.</p>
+  <div class="text-center py-5 glass-panel border-dashed">
+    <i class="fa-solid fa-check-double fa-3x mb-3 text-muted"></i>
+    <p style="color: var(--text-muted);">Queue is empty. No pending reviews.</p>
   </div>
 </ng-template>
 
-<hr class="my-5 border-secondary">
-
-<div class="row mb-4">
-  <div class="col-12 text-center">
-    <h2 class="display-6 fw-bold" style="color: var(--text-color);">Approved <span style="color: var(--accent-red)">Restaurants</span></h2>
-    <p class="lead" style="color: var(--text-muted);">Generate and download FitHae Review Cards</p>
+<!-- Approved Section -->
+<div class="row mt-5 pt-4 mb-4">
+  <div class="col-12">
+    <h3 class="fw-bold mb-4" style="color: var(--text-color);">
+      <span class="badge bg-success me-2" style="width: 12px; height: 12px; display: inline-block; border-radius: 50%;"></span>
+      Branded Review Cards
+    </h3>
   </div>
 </div>
 
-<div class="row g-4">
-  <div class="col-md-6 col-lg-4" *ngFor="let res of approvedRestaurants">
-    <div class="card glass-panel h-100 border-0 p-3">
-      <div class="card-body p-0 d-flex flex-column">
-        <h5 class="card-title fw-bold" style="color: var(--text-color);">{{ res.name }}</h5>
-        <p class="card-text small mb-3" style="color: var(--text-muted);"><i class="fa-solid fa-location-dot text-danger me-1"></i> {{ res.location }}</p>
-        
-        <button class="btn btn-outline-danger w-100 fw-bold rounded-pill shadow-sm" (click)="downloadQr(res._id, res.name)">
-          <i class="fa-solid fa-qrcode me-2"></i> Download Review Card
-        </button>
+<div class="row g-3">
+  <div class="col-md-4 col-lg-3" *ngFor="let res of approvedRestaurants">
+    <div class="glass-panel p-3 text-center border-opacity-50">
+      <div class="qr-preview mb-3 mx-auto d-flex align-items-center justify-content-center" style="background: #f8f9fa; width: 100px; height: 100px; border-radius: 12px; border: 2px dashed #dee2e6;">
+        <i class="fa-solid fa-qrcode fa-3x text-muted opacity-50"></i>
       </div>
+      <h6 class="fw-bold text-truncate mb-3" style="color: var(--text-color);">{{ res.name }}</h6>
+      <button class="btn btn-sm btn-primary-custom w-100 rounded-pill" (click)="downloadQr(res._id, res.name)">
+        <i class="fa-solid fa-download me-1"></i> Download Card
+      </button>
     </div>
   </div>
 </div>
