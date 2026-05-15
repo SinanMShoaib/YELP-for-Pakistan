@@ -156,59 +156,91 @@ router.get('/:id/qr', auth, isAdmin, async (req, res) => {
         const canvas = createCanvas(width, height);
         const ctx = canvas.getContext('2d');
 
-        // LOAD LUXURY BACKGROUND
-        try {
-            const bg = await loadImage('assets/luxury-bg.png');
-            ctx.drawImage(bg, 0, 0, width, height);
-        } catch (e) {
-            ctx.fillStyle = '#0f0f0f';
-            ctx.fillRect(0, 0, width, height);
-        }
+        // Solid dark background (no external image dependency)
+        ctx.fillStyle = '#111111';
+        ctx.fillRect(0, 0, width, height);
 
-        // GLASS OVERLAY
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+        // Subtle gradient overlay
+        const grad = ctx.createLinearGradient(0, 0, 0, height);
+        grad.addColorStop(0, 'rgba(20, 20, 40, 0.8)');
+        grad.addColorStop(1, 'rgba(10, 10, 10, 0.9)');
+        ctx.fillStyle = grad;
         ctx.fillRect(0, 0, width, height);
 
         // GOLDEN FRAME
         ctx.strokeStyle = '#d4af37';
-        ctx.lineWidth = 20;
-        ctx.strokeRect(20, 20, width - 40, height - 40);
+        ctx.lineWidth = 16;
+        ctx.strokeRect(24, 24, width - 48, height - 48);
 
-        // SHADOW HELPER
-        const drawText = (text, x, y, font, color) => {
+        // Inner thin gold line
+        ctx.strokeStyle = 'rgba(212, 175, 55, 0.3)';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(44, 44, width - 88, height - 88);
+
+        // Safe text helper - uses only 'sans-serif' generic family
+        const drawText = (text, x, y, size, color, bold = true) => {
             ctx.textAlign = 'center';
-            ctx.font = font;
-            ctx.shadowColor = 'black';
-            ctx.shadowBlur = 10;
+            ctx.textBaseline = 'middle';
+            ctx.font = (bold ? 'bold ' : '') + size + 'px sans-serif';
+            // Text shadow for readability
+            ctx.fillStyle = 'rgba(0,0,0,0.8)';
+            ctx.fillText(text, x + 2, y + 2);
+            // Actual text
             ctx.fillStyle = color;
             ctx.fillText(text, x, y);
-            ctx.shadowBlur = 0;
         };
 
-        drawText('FitHae', width / 2, 100, 'bold 60px Arial', '#ffffff');
-        drawText('OFFICIAL REVIEW CARD', width / 2, 140, 'bold 18px Arial', '#d4af37');
+        // Brand name
+        drawText('FitHae', width / 2, 100, 56, '#ffffff');
+        drawText('OFFICIAL REVIEW CARD', width / 2, 150, 16, '#d4af37');
 
-        // Restaurant Name
-        ctx.fillStyle = 'rgba(255,255,255,0.05)';
-        ctx.fillRect(50, 180, width - 100, 120);
-        drawText(restaurant.name.toUpperCase(), width / 2, 255, 'bold 36px Arial', '#ffffff');
-
-        // QR Background
-        ctx.fillStyle = '#ffffff';
+        // Decorative line under header
+        ctx.strokeStyle = '#d4af37';
+        ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.roundRect(width / 2 - 160, 340, 320, 320, 30);
-        ctx.fill();
+        ctx.moveTo(width / 2 - 100, 175);
+        ctx.lineTo(width / 2 + 100, 175);
+        ctx.stroke();
+
+        // Restaurant Name Box
+        ctx.fillStyle = 'rgba(255,255,255,0.06)';
+        ctx.fillRect(60, 195, width - 120, 80);
+        ctx.strokeStyle = 'rgba(212, 175, 55, 0.2)';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(60, 195, width - 120, 80);
+        
+        const rName = restaurant.name.toUpperCase();
+        const nameSize = rName.length > 20 ? 24 : 32;
+        drawText(rName, width / 2, 235, nameSize, '#ffffff');
+
+        // QR Code white background (simple rect, no roundRect)
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(width / 2 - 160, 310, 320, 320);
 
         const qrImage = await loadImage(qrDataUrl);
-        ctx.drawImage(qrImage, width / 2 - 150, 350, 300, 300);
+        ctx.drawImage(qrImage, width / 2 - 150, 320, 300, 300);
 
-        drawText('SCAN TO RATE & REVIEW', width / 2, 730, 'bold 24px Arial', '#ffffff');
-        drawText('Fit Hai Boss!', width / 2, 830, 'italic bold 32px Arial', '#d32f2f');
+        // Bottom text
+        drawText('SCAN TO RATE & REVIEW', width / 2, 690, 22, '#ffffff');
+
+        // Decorative line
+        ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(width / 2 - 120, 720);
+        ctx.lineTo(width / 2 + 120, 720);
+        ctx.stroke();
+
+        drawText('Powered by FitHae', width / 2, 760, 14, 'rgba(255,255,255,0.4)', false);
+        drawText('Fit Hai Boss!', width / 2, 830, 30, '#ef4444');
 
         const buffer = canvas.toBuffer('image/png');
         res.set('Content-Type', 'image/png');
         res.send(buffer);
-    } catch (err) { res.status(500).json({ message: "Failed to generate QR card." }); }
+    } catch (err) { 
+        console.error("QR CARD ERROR:", err);
+        res.status(500).json({ message: "Failed to generate QR card." }); 
+    }
 });
 
 module.exports = router;

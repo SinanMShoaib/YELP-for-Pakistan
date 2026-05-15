@@ -175,6 +175,45 @@
   </div>
 </div>
 
+<!-- Coupon Verifier Section -->
+<div class="row mt-5 mb-5">
+  <div class="col-12 text-center mb-4">
+    <div class="badge rounded-pill bg-danger bg-opacity-10 text-danger px-3 py-1 mb-2 fw-bold">Rewards</div>
+    <h3 class="fw-bold" style="color: var(--text-color);">Verify Your FitHae Coupon</h3>
+    <p style="color: var(--text-muted);">Enter your coupon code below to check its validity and status.</p>
+  </div>
+  <div class="col-md-6 mx-auto">
+    <div class="glass-panel p-4 p-md-5">
+      <div class="input-group mb-3">
+        <span class="input-group-text bg-transparent border-0" style="color: var(--text-muted);"><i class="fa-solid fa-ticket"></i></span>
+        <input type="text" class="form-control bg-transparent border-0 shadow-none text-uppercase fw-bold font-monospace" 
+               placeholder="FITHAE-XXXXXXXX" [(ngModel)]="couponCode" 
+               style="color: var(--text-color); letter-spacing: 2px; font-size: 1.1rem;">
+        <button class="btn btn-primary-custom px-4 rounded-pill fw-bold" (click)="verifyCoupon()" [disabled]="isVerifying">
+          <span *ngIf="isVerifying" class="spinner-border spinner-border-sm me-2"></span>
+          {{ isVerifying ? 'Checking...' : 'Verify' }}
+        </button>
+      </div>
+
+      <!-- Success Result -->
+      <div *ngIf="couponResult && couponResult.valid" class="mt-4 p-4 rounded-4 text-center" style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3);">
+        <i class="fa-solid fa-circle-check fa-3x text-success mb-3"></i>
+        <h5 class="fw-bold text-success">Valid Coupon!</h5>
+        <p class="mb-1" style="color: var(--text-color);">Holder: <strong>{{ couponResult.coupon?.userId?.name }}</strong></p>
+        <p class="mb-1" style="color: var(--text-color);">Code: <strong class="font-monospace">{{ couponResult.coupon?.couponId }}</strong></p>
+        <p class="mb-0 small" style="color: var(--text-muted);">Status: <span class="badge bg-success rounded-pill">{{ couponResult.coupon?.status }}</span></p>
+      </div>
+
+      <!-- Error Result -->
+      <div *ngIf="couponError" class="mt-4 p-4 rounded-4 text-center" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3);">
+        <i class="fa-solid fa-circle-xmark fa-3x text-danger mb-3"></i>
+        <h5 class="fw-bold text-danger">Invalid Coupon</h5>
+        <p class="mb-0 small" style="color: var(--text-muted);">{{ couponError }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <ng-template #noPicks>
   <div class="text-center py-5 glass-panel">
     <div class="spinner-border text-danger" role="status"></div>

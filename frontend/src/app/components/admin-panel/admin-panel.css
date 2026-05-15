@@ -1,0 +1,126 @@
+/* ================================================
+   Admin Panel — Color & Visibility Overrides
+   ================================================ */
+
+/* Dashboard Header Stats */
+:host .glass-panel h3,
+:host .glass-panel h4,
+:host .glass-panel h5,
+:host .glass-panel h6 {
+  color: var(--text-color);
+}
+
+/* Tab Navigation */
+:host .nav-pills .nav-link {
+  color: var(--text-color);
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  transition: all 0.3s ease;
+}
+
+:host .nav-pills .nav-link:hover {
+  background: rgba(220, 38, 38, 0.08);
+}
+
+:host .nav-pills .nav-link.active {
+  color: #fff !important;
+}
+
+/* Quick Stats Cards — prevent hover-lift for stat cards */
+:host .col-md-3 .glass-panel:hover {
+  transform: none;
+}
+
+/* Table Overrides — guaranteed text visibility */
+:host .table {
+  --bs-table-bg: transparent;
+  --bs-table-color: var(--text-color);
+  --bs-table-hover-bg: rgba(220, 38, 38, 0.04);
+  --bs-table-hover-color: var(--text-color);
+  color: var(--text-color);
+}
+
+:host .table th {
+  color: var(--text-muted) !important;
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-color: rgba(255,255,255,0.08) !important;
+}
+
+:host .table td {
+  color: var(--text-color) !important;
+  border-color: rgba(255,255,255,0.05) !important;
+}
+
+:host .table tbody tr:hover {
+  background: rgba(220, 38, 38, 0.04);
+}
+
+/* Card body text */
+:host .card-body p,
+:host .card-text {
+  color: var(--text-muted) !important;
+}
+
+:host .card-body h5,
+:host .card-body h6 {
+  color: var(--text-color) !important;
+}
+
+/* Buttons */
+:host .btn-success {
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  border: none;
+  color: #fff;
+}
+
+:host .btn-outline-danger {
+  color: var(--accent-red);
+  border-color: var(--accent-red);
+}
+
+/* Empty state text */
+:host .border-dashed {
+  border: 2px dashed var(--glass-border) !important;
+}
+
+/* Responsive: Admin panel on mobile */
+@media (max-width: 768px) {
+  :host .nav-pills {
+    flex-wrap: wrap;
+  }
+  
+  :host .nav-pills .nav-link {
+    font-size: 0.85rem;
+    padding: 0.4rem 1rem !important;
+  }
+
+  :host .d-flex.gap-3 {
+    flex-wrap: wrap;
+    gap: 0.5rem !important;
+  }
+
+  :host .table {
+    font-size: 0.85rem;
+  }
+
+  :host .table th,
+  :host .table td {
+    padding: 0.5rem 0.4rem;
+  }
+
+  /* Stack stat cards on mobile */
+  :host .col-md-3 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+
+@media (max-width: 480px) {
+  :host .col-md-3 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}

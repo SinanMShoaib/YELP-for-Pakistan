@@ -110,11 +110,11 @@ router.get('/download/:couponId', auth, async (req, res) => {
 
         // Header Text
         ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 32px Arial';
+        ctx.font = 'bold 32px sans-serif';
         ctx.textAlign = 'left';
         ctx.fillText('FITHAE PRIVILEGES', tx + 30, ty + 45);
 
-        ctx.font = 'bold 24px Arial';
+        ctx.font = 'bold 24px sans-serif';
         ctx.fillText('BOARDING PASS', tx + 550, ty + 45);
 
         // Stub Header Text
@@ -131,9 +131,9 @@ router.get('/download/:couponId', auth, async (req, res) => {
         ctx.setLineDash([]); // reset
 
         // Helper for label and value
-        const drawField = (label, value, x, y, valFont = 'bold 28px Arial') => {
+        const drawField = (label, value, x, y, valFont = 'bold 28px sans-serif') => {
             ctx.fillStyle = '#888888';
-            ctx.font = 'bold 14px Arial';
+            ctx.font = 'bold 14px sans-serif';
             ctx.textAlign = 'left';
             ctx.fillText(label, x, y);
             
@@ -143,22 +143,22 @@ router.get('/download/:couponId', auth, async (req, res) => {
         };
 
         // --- Left Section (Main) ---
-        drawField('PASS HOLDER', coupon.userId.name.toUpperCase(), tx + 40, ty + 120, 'bold 32px Arial');
-        drawField('VOUCHER ID', coupon.couponId, tx + 40, ty + 210, 'bold 26px Arial');
+        drawField('PASS HOLDER', coupon.userId.name.toUpperCase(), tx + 40, ty + 120, 'bold 32px sans-serif');
+        drawField('VOUCHER ID', coupon.couponId, tx + 40, ty + 210, 'bold 26px sans-serif');
         
-        drawField('DISCOUNT', '15% OFF', tx + 550, ty + 120, 'bold 40px Arial');
+        drawField('DISCOUNT', '15% OFF', tx + 550, ty + 120, 'bold 40px sans-serif');
         
         const expDate = coupon.expiryDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-        drawField('EXPIRY DATE', expDate, tx + 550, ty + 210, 'bold 24px Arial');
+        drawField('EXPIRY DATE', expDate, tx + 550, ty + 210, 'bold 24px sans-serif');
 
         // Footer text left
         ctx.fillStyle = '#aaaaaa';
-        ctx.font = '12px Arial';
+        ctx.font = '12px sans-serif';
         ctx.fillText('Redeemable at any partner restaurant. Fit Hai Boss!', tx + 40, ty + 310);
 
         // --- Right Section (Stub) ---
-        drawField('HOLDER', coupon.userId.name.toUpperCase().substring(0, 15), splitX + 20, ty + 120, 'bold 18px Arial');
-        drawField('DISCOUNT', '15% OFF', splitX + 20, ty + 210, 'bold 24px Arial');
+        drawField('HOLDER', coupon.userId.name.toUpperCase().substring(0, 15), splitX + 20, ty + 120, 'bold 18px sans-serif');
+        drawField('DISCOUNT', '15% OFF', splitX + 20, ty + 210, 'bold 24px sans-serif');
         
         // Draw fake barcode
         ctx.fillStyle = '#333333';

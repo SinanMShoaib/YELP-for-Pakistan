@@ -19,6 +19,12 @@ export class HomeComponent implements OnInit {
   weatherError: string = '';
   searchQuery: string = '';
   recentActivity: any[] = [];
+
+  // Coupon Verifier
+  couponCode: string = '';
+  couponResult: any = null;
+  couponError: string = '';
+  isVerifying: boolean = false;
   
   categories = [
     { name: 'Desi', icon: 'fa-solid fa-pepper-hot', color: '#ff4d4d' },
@@ -87,6 +93,24 @@ export class HomeComponent implements OnInit {
           rating: rev.rating,
           comment: rev.comment
         }));
+      }
+    });
+  }
+
+  verifyCoupon() {
+    if (!this.couponCode.trim()) return;
+    this.isVerifying = true;
+    this.couponResult = null;
+    this.couponError = '';
+
+    this.http.get(`/api/coupons/verify/${this.couponCode.trim().toUpperCase()}`).subscribe({
+      next: (data: any) => {
+        this.couponResult = data;
+        this.isVerifying = false;
+      },
+      error: (err: any) => {
+        this.couponError = err.error?.message || 'Coupon not found or invalid.';
+        this.isVerifying = false;
       }
     });
   }
