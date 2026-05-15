@@ -66,26 +66,36 @@
         </div>
       </div>
 
-      <div class="glass-panel p-4">
-        <h3 class="fw-bold text-white mb-4">Restaurant Submissions</h3>
-        <div *ngIf="submissions.length === 0" class="text-center py-4 text-muted">
-          You haven't submitted any restaurants yet.
+      <div class="glass-panel p-4 overflow-hidden">
+        <h3 class="fw-bold mb-4" style="color: var(--text-color);">Submission Tracker</h3>
+        <div *ngIf="submissions.length === 0" class="text-center py-5 border-dashed rounded">
+          <i class="fa-solid fa-folder-open fa-2x mb-3 text-muted opacity-50"></i>
+          <p style="color: var(--text-muted);">No records found. Start exploring!</p>
         </div>
         <div class="list-group list-group-flush">
-          <div *ngFor="let res of submissions" class="list-group-item bg-transparent border-secondary py-3 px-0">
+          <div *ngFor="let res of submissions" class="list-group-item bg-transparent border-0 py-3 px-0 border-bottom border-white border-opacity-10 animate-fade-in">
             <div class="d-flex justify-content-between align-items-center">
               <div>
-                <h6 class="text-white fw-bold mb-1">{{ res.name }}</h6>
-                <p class="text-secondary small mb-0">{{ res.location }}</p>
+                <h6 class="fw-bold mb-1" style="color: var(--text-color);">{{ res.name }}</h6>
+                <p class="small mb-0" style="color: var(--text-muted);"><i class="fa-solid fa-location-dot me-1"></i> {{ res.location }}</p>
               </div>
-              <span class="badge" 
-                    [ngClass]="{
-                      'bg-warning text-dark': res.status === 'Pending Review',
-                      'bg-success': res.status === 'Approved',
-                      'bg-danger': res.status === 'Rejected'
-                    }">
-                {{ res.status }}
-              </span>
+              <div class="text-end">
+                <span class="badge rounded-pill px-3 py-2" 
+                      [ngClass]="{
+                        'bg-warning bg-opacity-10 text-warning': res.status === 'Pending Review',
+                        'bg-success bg-opacity-10 text-success': res.status === 'Approved',
+                        'bg-danger bg-opacity-10 text-danger': res.status === 'Rejected'
+                      }">
+                  <i class="fa-solid me-1" 
+                     [ngClass]="{
+                       'fa-clock': res.status === 'Pending Review',
+                       'fa-check-circle': res.status === 'Approved',
+                       'fa-circle-xmark': res.status === 'Rejected'
+                     }"></i>
+                  {{ res.status }}
+                </span>
+                <div class="mt-1 x-small text-muted" style="font-size: 0.7rem;" *ngIf="res.status === 'Approved'">+1 Token Awarded</div>
+              </div>
             </div>
           </div>
         </div>

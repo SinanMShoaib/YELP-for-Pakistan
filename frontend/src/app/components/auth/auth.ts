@@ -19,6 +19,8 @@ export class AuthComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoginMode = true;
   isLoading = false;
   error: string | null = null;
+  mouseX = 0;
+  mouseY = 0;
 
   // Three.js properties
   private scene!: THREE.Scene;
@@ -37,6 +39,11 @@ export class AuthComponent implements OnInit, AfterViewInit, OnDestroy {
   };
 
   constructor(private authService: AuthService, private router: Router) {}
+
+  updateTorch(event: MouseEvent) {
+    this.mouseX = event.clientX;
+    this.mouseY = event.clientY;
+  }
 
   ngOnInit() {
     if (localStorage.getItem('token')) {

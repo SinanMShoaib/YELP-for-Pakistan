@@ -1,46 +1,51 @@
-<div class="auth-wrapper">
+<div class="auth-wrapper" (mousemove)="updateTorch($event)">
   <div #threeCanvas id="three-canvas"></div>
-  <div class="auth-container d-flex align-items-center justify-content-center">
-    <div class="card auth-card glass-panel shadow-lg border-0 text-white p-4">
+  <div class="torch" [style.--x.px]="mouseX" [style.--y.px]="mouseY"></div>
+  
+  <div class="auth-container">
+    <div class="card auth-card glass-panel shadow-lg border-0 text-white animate-fade-in">
       <div class="text-center mb-4">
-        <h2 class="fw-bold">{{ isLoginMode ? 'Welcome Back' : 'Join FitHae' }}</h2>
-        <p class="text-secondary">{{ isLoginMode ? 'Enter your credentials to continue' : 'Create an account to start reviewing' }}</p>
+        <div class="badge rounded-pill bg-danger bg-opacity-10 text-danger px-3 py-1 mb-2 small fw-bold">Enterprise Access</div>
+        <h2 class="fw-bold mb-1">{{ isLoginMode ? 'FitHae Portal' : 'Join Community' }}</h2>
+        <p class="small" style="color: var(--text-muted);">{{ isLoginMode ? 'Authentication required for review privileges' : 'Create your digital culinary identity' }}</p>
       </div>
 
-      <div *ngIf="error" class="alert alert-danger py-2 text-center">{{ error }}</div>
+      <div *ngIf="error" class="alert glass-panel py-2 text-center text-danger border-danger border-opacity-25 small mb-4">
+        <i class="fa-solid fa-circle-exclamation me-2"></i> {{ error }}
+      </div>
 
       <form (ngSubmit)="onSubmit()">
         <div class="mb-3" *ngIf="!isLoginMode">
-          <label class="form-label small text-uppercase fw-bold text-secondary">Full Name</label>
-          <input type="text" class="form-control bg-dark border-secondary text-white" [(ngModel)]="authData.name" name="name" required>
+          <label class="form-label small text-uppercase fw-bold text-muted">Full Name</label>
+          <input type="text" class="form-control" [(ngModel)]="authData.name" name="name" required placeholder="Full Name">
         </div>
 
         <div class="mb-3" *ngIf="!isLoginMode">
-          <label class="form-label small text-uppercase fw-bold text-secondary">Username</label>
-          <input type="text" class="form-control bg-dark border-secondary text-white" [(ngModel)]="authData.username" name="username" required>
+          <label class="form-label small text-uppercase fw-bold text-muted">Username</label>
+          <input type="text" class="form-control" [(ngModel)]="authData.username" name="username" required placeholder="Unique username">
         </div>
 
         <div class="mb-3">
-          <label class="form-label small text-uppercase fw-bold text-secondary">Email Address</label>
-          <input type="email" class="form-control bg-dark border-secondary text-white" [(ngModel)]="authData.email" name="email" required>
+          <label class="form-label small text-uppercase fw-bold text-muted">Email Address</label>
+          <input type="email" class="form-control" [(ngModel)]="authData.email" name="email" required placeholder="name@example.com">
         </div>
 
         <div class="mb-4">
-          <label class="form-label small text-uppercase fw-bold text-secondary">Password</label>
-          <input type="password" class="form-control bg-dark border-secondary text-white" [(ngModel)]="authData.password" name="password" required>
-          <div class="small mt-1 text-muted" *ngIf="!isLoginMode">
-            Must be 8+ chars with uppercase, lowercase, number, and special char.
+          <label class="form-label small text-uppercase fw-bold text-muted">Security Key</label>
+          <input type="password" class="form-control" [(ngModel)]="authData.password" name="password" required placeholder="••••••••">
+          <div class="small mt-1 text-muted" *ngIf="!isLoginMode" style="font-size: 0.7rem;">
+            Strength: 8+ chars, Case sensitive, Symbols required.
           </div>
         </div>
 
         <button type="submit" class="btn btn-primary-custom w-100 fw-bold mb-3 py-2" [disabled]="isLoading">
-          {{ isLoading ? 'Processing...' : (isLoginMode ? 'LOGIN' : 'SIGN UP') }}
+          {{ isLoading ? 'VERIFYING...' : (isLoginMode ? 'SECURE LOGIN' : 'INITIALIZE ACCOUNT') }}
         </button>
 
-        <div class="text-center mt-3">
-          <span class="text-secondary small">{{ isLoginMode ? "Don't have an account?" : "Already have an account?" }}</span>
-          <button type="button" class="btn btn-link text-danger btn-sm p-0 ms-1 fw-bold" (click)="onToggleMode()">
-            {{ isLoginMode ? 'Create Account' : 'Sign In' }}
+        <div class="text-center">
+          <span class="text-muted small">{{ isLoginMode ? "New operative?" : "Existing operative?" }}</span>
+          <button type="button" class="btn btn-link text-danger btn-sm p-0 ms-1 fw-bold text-decoration-none" (click)="onToggleMode()">
+            {{ isLoginMode ? 'Register Entry' : 'Verify Credentials' }}
           </button>
         </div>
       </form>

@@ -62,7 +62,7 @@ export class HomeComponent implements OnInit {
   }
 
   loadTopPicks() {
-    this.api.getRestaurants('', '').subscribe({
+    this.api.getRestaurants({}).subscribe({
       next: (data) => {
         this.topRestaurants = data
           .sort((a: any, b: any) => (b.averageRating || 0) - (a.averageRating || 0))

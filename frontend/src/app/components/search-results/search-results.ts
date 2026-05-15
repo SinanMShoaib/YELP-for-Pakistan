@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api';
-import { RouterLink } from '@angular/router';
+import { RouterLink, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-search-results',
@@ -13,25 +13,37 @@ import { RouterLink } from '@angular/router';
 })
 export class SearchResultsComponent implements OnInit {
   restaurants: any[] = [];
+  isLoading: boolean = false;
 
-  // Renamed to match [(ngModel)]="searchCity" in the UI
-  searchCity: string = '';
-  searchName: string = '';
+  filters = {
+    city: '',
+    name: '',
+    category: ''
+  };
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    // Initial search to populate the list on load
-    this.search();
+    // Listen for query parameter changes
+    this.route.queryParams.subscribe(params => {
+      this.filters.name = params['name'] || '';
+      this.filters.city = params['city'] || '';
+      this.filters.category = params['category'] || '';
+      this.search();
+    });
   }
 
   search() {
-    // Removed the return check so it fetches all if inputs are empty
-    this.api.getRestaurants(this.searchCity, this.searchName).subscribe({
+    this.isLoading = true;
+    this.api.getRestaurants(this.filters).subscribe({
       next: (data: any) => {
         this.restaurants = data;
+        this.isLoading = false;
       },
-      error: (err) => console.error('Search failed:', err)
+      error: (err) => {
+        console.error('Search failed:', err);
+        this.isLoading = false;
+      }
     });
   }
 }

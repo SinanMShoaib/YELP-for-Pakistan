@@ -12,32 +12,55 @@
           </div>
           <h2 class="fw-bold mb-2" style="color: var(--text-color);">Onboard a Spot</h2>
           <p style="color: var(--text-muted);">
-            Paste a Google Maps share link to automatically import restaurant details.
+            {{ showManual ? 'Enter details manually for admin review.' : 'Paste a Google Maps share link to automatically import details.' }}
           </p>
         </div>
 
-        <div class="form-floating mb-4">
-          <input type="text" 
-                 class="form-control" 
-                 id="googleMapsLink" 
-                 [(ngModel)]="googleMapsLink"
-                 placeholder="https://maps.app.goo.gl/..."
-                 [disabled]="isLoading">
-          <label for="googleMapsLink" style="color: var(--text-muted);">Google Maps Share Link</label>
+        <!-- Automated Link Input -->
+        <div *ngIf="!showManual" class="animate-fade-in">
+          <div class="form-floating mb-4">
+            <input type="text" class="form-control" id="googleMapsLink" [(ngModel)]="googleMapsLink" placeholder="Link" [disabled]="isLoading">
+            <label for="googleMapsLink">Google Maps Share Link</label>
+          </div>
+          <button class="btn btn-primary-custom w-100 py-3 fs-5 fw-bold" (click)="onAdd(false)" [disabled]="!googleMapsLink || isLoading">
+            {{ isLoading ? 'Retrieving Intelligence...' : 'Auto-Import Spot' }}
+          </button>
         </div>
 
-        <button class="btn btn-primary-custom w-100 py-3 fs-5 fw-bold" 
-                (click)="onAdd()" 
-                [disabled]="!googleMapsLink || isLoading">
-          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status"></span>
-          {{ isLoading ? 'Retrieving Intelligence...' : 'Add to FitHae' }}
-        </button>
+        <!-- Manual Input Form -->
+        <div *ngIf="showManual" class="animate-fade-in text-start">
+          <div class="mb-3">
+            <input type="text" class="form-control" [(ngModel)]="manualData.name" placeholder="Restaurant Name">
+          </div>
+          <div class="mb-3">
+            <input type="text" class="form-control" [(ngModel)]="manualData.location" placeholder="Full Address">
+          </div>
+          <div class="row mb-3">
+            <div class="col">
+              <select class="form-select" [(ngModel)]="manualData.city" style="background: var(--input-bg); color: var(--text-color);">
+                <option value="">Select City</option>
+                <option value="islamabad">Islamabad</option>
+                <option value="rawalpindi">Rawalpindi</option>
+                <option value="lahore">Lahore</option>
+                <option value="karachi">Karachi</option>
+              </select>
+            </div>
+          </div>
+          <div class="mb-3">
+            <input type="text" class="form-control" [(ngModel)]="manualData.imageUrl" placeholder="Image URL (Optional)">
+          </div>
+          <div class="mb-4">
+            <textarea class="form-control" [(ngModel)]="manualData.description" rows="3" placeholder="Brief Description"></textarea>
+          </div>
+          <button class="btn btn-primary-custom w-100 py-3 fs-5 fw-bold" (click)="onAdd(true)" [disabled]="isLoading">
+            {{ isLoading ? 'Submitting...' : 'Submit for Review' }}
+          </button>
+        </div>
 
         <div class="mt-4 pt-3 border-top border-secondary border-opacity-10">
-          <p class="small mb-0" style="color: var(--text-muted);">
-            <i class="fa-solid fa-circle-info me-1"></i> 
-            Our AI will detect the city, name, and photos automatically.
-          </p>
+          <button class="btn btn-link text-decoration-none text-danger small fw-bold" (click)="showManual = !showManual">
+            {{ showManual ? 'Back to Auto-Import' : 'Add details manually instead' }}
+          </button>
         </div>
       </div>
     </div>

@@ -41,7 +41,7 @@ export class AdminPanelComponent implements OnInit {
   }
 
   loadApproved() {
-    this.api.getRestaurants('', '').subscribe({
+    this.api.getRestaurants({}).subscribe({
       next: (data) => this.approvedRestaurants = data.filter((r: any) => r.status === 'Approved'),
       error: (err) => console.error("Failed to load approved restaurants")
     });

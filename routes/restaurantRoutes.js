@@ -90,61 +90,78 @@ router.get('/:id', async (req, res) => {
 
 router.post('/add', auth, async (req, res) => {
     try {
-        const { googleMapsLink } = req.body;
-        
-        if (!googleMapsLink) {
-            return res.status(400).json({ message: "Google Maps link is required." });
-        }
-
-        const resolveResponse = await axios.get(googleMapsLink, { 
-            maxRedirects: 5,
-            headers: { 'User-Agent': 'Mozilla/5.0' } 
-        });
-        const longUrl = resolveResponse.request.res.responseUrl;
-
-        const namePart = longUrl.split('/place/')[1]?.split('/')[0];
-        const restaurantName = decodeURIComponent(namePart || '').replace(/\+/g, ' ');
-
-        if (!restaurantName) {
-            return res.status(400).json({ message: "Could not detect restaurant name from link." });
-        }
-
-        const googleSearch = await client.findPlaceFromText({
-            params: {
-                input: restaurantName,
-                inputtype: 'textquery',
-                fields: ['name', 'formatted_address', 'photos'],
-                key: process.env.GOOGLE_MAPS_API_KEY
-            }
-        });
-
-        const place = googleSearch.data.candidates[0];
-        if (!place) {
-            return res.status(404).json({ message: "No matching restaurant found on Google Maps." });
-        }
-
-        const detectedCity = detectCity(place.formatted_address);
-        if (!detectedCity) {
-            return res.status(400).json({ 
-                message: "This restaurant is outside our supported cities (Islamabad, Rawalpindi, Lahore, Karachi)." 
-            });
-        }
-
+        const { googleMapsLink, manualData } = req.body;
         const user = await User.findById(req.user.id);
         if (!user) return res.status(404).json({ message: "User not found." });
 
-        let photoUrl = 'assets/default-restaurant.jpg'; 
-        if (place.photos && place.photos.length > 0) {
-            const photoReference = place.photos[0].photo_reference;
-            photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=${photoReference}&key=${process.env.GOOGLE_MAPS_API_KEY}`;
+        let restaurantData = {};
+
+        if (googleMapsLink) {
+            // --- Google Maps Automated Detection ---
+            const resolveResponse = await axios.get(googleMapsLink, { 
+                maxRedirects: 5,
+                headers: { 'User-Agent': 'Mozilla/5.0' } 
+            });
+            const longUrl = resolveResponse.request.res.responseUrl;
+            const namePart = longUrl.split('/place/')[1]?.split('/')[0];
+            const restaurantName = decodeURIComponent(namePart || '').replace(/\+/g, ' ');
+
+            if (!restaurantName) {
+                return res.status(400).json({ message: "Could not detect restaurant name from link." });
+            }
+
+            const googleSearch = await client.findPlaceFromText({
+                params: {
+                    input: restaurantName,
+                    inputtype: 'textquery',
+                    fields: ['name', 'formatted_address', 'photos'],
+                    key: process.env.GOOGLE_MAPS_API_KEY
+                }
+            });
+
+            const place = googleSearch.data.candidates[0];
+            if (!place) {
+                return res.status(404).json({ message: "No matching restaurant found on Google Maps." });
+            }
+
+            const detectedCity = detectCity(place.formatted_address);
+            if (!detectedCity) {
+                return res.status(400).json({ 
+                    message: "This restaurant is outside our supported cities (Islamabad, Rawalpindi, Lahore, Karachi)." 
+                });
+            }
+
+            let photoUrl = 'assets/default-restaurant.jpg'; 
+            if (place.photos && place.photos.length > 0) {
+                const photoReference = place.photos[0].photo_reference;
+                photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=${photoReference}&key=${process.env.GOOGLE_MAPS_API_KEY}`;
+            }
+
+            restaurantData = {
+                name: place.name,
+                location: place.formatted_address,
+                city: detectedCity,
+                imageUrl: photoUrl,
+                description: `A top-rated spot in ${detectedCity}, added by our community.`
+            };
+        } else if (manualData) {
+            // --- Manual Submission ---
+            if (!manualData.name || !manualData.location || !manualData.city) {
+                return res.status(400).json({ message: "Name, Location, and City are required for manual entry." });
+            }
+            restaurantData = {
+                name: manualData.name,
+                location: manualData.location,
+                city: manualData.city.toLowerCase(),
+                imageUrl: manualData.imageUrl || 'assets/default-restaurant.jpg',
+                description: manualData.description || `A new discovery in ${manualData.city}.`
+            };
+        } else {
+            return res.status(400).json({ message: "Either Google Maps link or manual data is required." });
         }
 
         const newRestaurant = new Restaurant({
-            name: place.name,
-            location: place.formatted_address,
-            description: `A top-rated spot in ${detectedCity}, added by our community.`,
-            city: detectedCity,
-            imageUrl: photoUrl,
+            ...restaurantData,
             addedBy: {
                 userId: user._id,
                 userName: user.username || user.name
@@ -154,14 +171,14 @@ router.post('/add', auth, async (req, res) => {
 
         const savedRestaurant = await newRestaurant.save();
         res.status(201).json({ 
-            message: "Your restaurant submission has been received. It will be added shortly after our admin reviews and approves it.", 
+            message: "Submission received! Admin will review and approve it soon.", 
             restaurant: savedRestaurant 
         });
 
     } catch (err) {
-        console.error("GOOGLE ADD ERROR:", err.message);
+        console.error("ADD RESTAURANT ERROR:", err.message);
         res.status(500).json({ 
-            message: "Failed to process Google Maps link.",
+            message: "Failed to process submission.",
             error: err.message 
         });
     }

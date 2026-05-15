@@ -1,16 +1,95 @@
+.auth-wrapper {
+  height: 100vh;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#three-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
 .auth-container {
-  min-height: 80vh;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .auth-card {
   width: 100%;
-  max-width: 400px;
-  border-radius: 15px;
+  max-width: 420px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 32px;
+  background: rgba(15, 23, 42, 0.4) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  padding: 2.5rem !important;
+}
+
+/* Torch Effect */
+.torch {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+  background: radial-gradient(
+    circle 150px at var(--x) var(--y),
+    transparent 0%,
+    rgba(0, 0, 0, 0.95) 100%
+  );
+}
+
+.form-control {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #fff !important;
+  border-radius: 12px !important;
+  padding: 0.75rem 1rem !important;
 }
 
 .form-control:focus {
-  background-color: #2b2b2b;
-  border-color: #ffc107;
-  color: white;
-  box-shadow: none;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: var(--accent-red) !important;
+  box-shadow: none !important;
+}
+
+.btn-primary-custom {
+  background: linear-gradient(135deg, var(--accent-maroon), var(--accent-red));
+  border: none;
+  border-radius: 12px;
+  padding: 0.8rem;
+  transition: all 0.3s ease;
+}
+
+.btn-primary-custom:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(211, 47, 47, 0.3);
+}
+
+/* Hide scrollbar for auth-card */
+.auth-card::-webkit-scrollbar {
+  display: none;
+}
+.auth-card {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

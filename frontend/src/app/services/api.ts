@@ -11,9 +11,16 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  // Get restaurants by city/name
-  getRestaurants(city: string, name: string = ''): Observable<any> {
-    return this.http.get(`${this.baseUrl}/search?city=${city}&name=${name}`);
+  // Get restaurants with optional filters
+  getRestaurants(filters: any = {}): Observable<any> {
+    const params = new URLSearchParams();
+    if (filters.city) params.set('city', filters.city);
+    if (filters.name) params.set('name', filters.name);
+    if (filters.category) params.set('category', filters.category);
+    if (filters.price) params.set('price', filters.price);
+    if (filters.amenity) params.set('amenity', filters.amenity);
+    
+    return this.http.get(`${this.baseUrl}/search?${params.toString()}`);
   }
 
   getRestaurantById(id: string): Observable<any> {
