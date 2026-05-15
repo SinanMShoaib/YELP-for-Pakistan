@@ -297,3 +297,179 @@ body {
 .tracking-tighter {
   letter-spacing: -1.5px;
 }
+
+/* ================================================
+   GLOBAL MOBILE RESPONSIVE SYSTEM
+   ================================================ */
+
+/* Hide custom cursor on touch devices — it doesn't make sense */
+@media (pointer: coarse) {
+  .custom-cursor,
+  .cursor-trail {
+    display: none !important;
+  }
+}
+
+/* Tablets & Small Laptops */
+@media (max-width: 992px) {
+  .container-fluid {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  .navbar {
+    margin: 0.5rem !important;
+    padding: 0.5rem 1rem !important;
+  }
+
+  .display-2 {
+    font-size: 2.5rem !important;
+  }
+
+  .glass-panel {
+    border-radius: 16px;
+  }
+
+  .interaction-ball {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+/* Mobile Phones */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+
+  .container-fluid {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+
+  .navbar {
+    margin: 0.25rem !important;
+    border-radius: 16px !important;
+  }
+
+  .display-2 {
+    font-size: 2rem !important;
+  }
+
+  .display-5 {
+    font-size: 1.5rem !important;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  .glass-panel {
+    border-radius: 14px;
+    padding: 1rem;
+  }
+
+  /* Disable hover-lift on mobile (no hover on touch) */
+  .glass-panel:hover {
+    transform: none;
+  }
+
+  /* Category cards - smaller on mobile */
+  .category-card {
+    width: 100px !important;
+    padding: 0.75rem !important;
+  }
+
+  .category-card i {
+    font-size: 1.5rem !important;
+  }
+
+  .category-card h6 {
+    font-size: 0.75rem !important;
+  }
+
+  /* Collections */
+  .collection-card img {
+    height: 180px !important;
+  }
+
+  /* Impact card — hide on small screens (already d-none d-md-block) */
+  .impact-card {
+    padding: 1.5rem !important;
+  }
+
+  /* Flip cards — smaller height */
+  .flip-card {
+    height: 320px;
+  }
+
+  /* Interaction ball — smaller and subtler */
+  .interaction-ball {
+    width: 80px;
+    height: 80px;
+    filter: blur(30px);
+  }
+
+  /* Navbar auth buttons */
+  .navbar .d-flex.gap-3 {
+    flex-wrap: wrap;
+    gap: 0.5rem !important;
+  }
+
+  .navbar .btn {
+    font-size: 0.85rem;
+    padding: 0.4rem 1rem !important;
+  }
+}
+
+/* Small Phones (iPhone SE, etc.) */
+@media (max-width: 480px) {
+  .display-2 {
+    font-size: 1.6rem !important;
+  }
+
+  .lead {
+    font-size: 1rem !important;
+  }
+
+  .glass-panel {
+    border-radius: 12px;
+  }
+
+  .category-card {
+    width: 80px !important;
+    padding: 0.5rem !important;
+  }
+
+  .gap-4 {
+    gap: 0.5rem !important;
+  }
+
+  .py-5 {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  .mt-5 {
+    margin-top: 2rem !important;
+  }
+
+  .mb-5 {
+    margin-bottom: 2rem !important;
+  }
+}
+
+/* Very small screens (320px width) */
+@media (max-width: 360px) {
+  .navbar-brand span {
+    font-size: 1.2rem !important;
+  }
+
+  .display-2 {
+    font-size: 1.4rem !important;
+  }
+
+  .btn {
+    font-size: 0.8rem;
+  }
+}
