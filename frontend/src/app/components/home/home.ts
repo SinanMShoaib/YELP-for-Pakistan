@@ -29,6 +29,12 @@ export class HomeComponent implements OnInit {
     { name: 'Steaks', icon: 'fa-solid fa-drumstick-bite', color: '#663300' }
   ];
 
+  collections = [
+    { name: 'Lahore Nashta Points', spots: 12, image: 'https://images.unsplash.com/photo-1627483262268-9c2b5b2834b5?w=500', city: 'Lahore' },
+    { name: 'Islamabad Coffee Crawl', spots: 8, image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=500', city: 'Islamabad' },
+    { name: 'Karachi Seafood Gems', spots: 15, image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=500', city: 'Karachi' }
+  ];
+
   constructor(private http: HttpClient, private api: ApiService, private router: Router) {}
 
   ngOnInit() {

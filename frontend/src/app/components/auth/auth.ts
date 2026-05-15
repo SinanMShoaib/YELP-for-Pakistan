@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, signal } from '@angular/core';
 import { AuthService } from '../../services/auth';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -21,6 +21,9 @@ export class AuthComponent implements OnInit, AfterViewInit, OnDestroy {
   error: string | null = null;
   mouseX = 0;
   mouseY = 0;
+  tiltX = 0;
+  tiltY = 0;
+  isDarkMode = signal(false);
 
   // Three.js properties
   private scene!: THREE.Scene;
@@ -45,10 +48,33 @@ export class AuthComponent implements OnInit, AfterViewInit, OnDestroy {
     this.mouseY = event.clientY;
   }
 
+  updateTilt(event: MouseEvent) {
+    const card = event.currentTarget as HTMLElement;
+    const rect = card.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    
+    this.tiltX = (y - centerY) / 20;
+    this.tiltY = -(x - centerX) / 20;
+  }
+
   ngOnInit() {
     if (localStorage.getItem('token')) {
       this.router.navigate(['/search']);
     }
+    const theme = localStorage.getItem('theme') || 'light';
+    this.isDarkMode.set(theme === 'dark');
+    document.body.setAttribute('data-theme', theme);
+  }
+
+  toggleTheme() {
+    this.isDarkMode.update(v => !v);
+    const newTheme = this.isDarkMode() ? 'dark' : 'light';
+    document.body.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
   }
 
   ngAfterViewInit() {
