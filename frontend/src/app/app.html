@@ -1,79 +1,74 @@
-<nav *ngIf="router.url !== '/auth'" class="navbar navbar-expand-lg glass-panel sticky-top mb-4 px-3" style="border-radius: 0 0 16px 16px;">
-  <div class="container">
-    <a class="navbar-brand fw-bold fs-3" routerLink="/search" style="color: var(--accent-red)">
-      Fit<span style="color: var(--text-color)">Hae</span>
+<!-- Interactive Liquid Ball (2D Animation) -->
+<div class="interaction-ball" [style.left.px]="ballX" [style.top.px]="ballY"></div>
+
+<!-- Navbar -->
+<nav *ngIf="router.url !== '/auth'" class="navbar navbar-expand-lg glass-panel sticky-top mx-3 mt-3 px-4 shadow-lg border-white border-opacity-10">
+  <div class="container-fluid">
+    <a class="navbar-brand d-flex align-items-center gap-2" routerLink="/home">
+      <div class="bg-danger rounded-circle p-2 d-flex align-items-center justify-content-center shadow-sm" style="width: 40px; height: 40px;">
+        <i class="fa-solid fa-bolt text-white"></i>
+      </div>
+      <span class="fw-bold fs-4 tracking-tighter" style="color: var(--text-color);">Fit<span class="text-danger">Hae</span></span>
     </a>
 
-    <!-- Mobile Toggle -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
+    <!-- Weather & Time Ticker (Compact) -->
+    <div class="d-none d-lg-flex align-items-center ms-4 px-3 py-1 rounded-pill glass-panel border-0 small opacity-75">
+      <i class="fa-solid fa-cloud-sun me-2 text-warning"></i>
+      <span class="me-3">{{ weatherData.temp }} • {{ weatherData.condition }}</span>
+      <i class="fa-solid fa-clock me-2 text-primary"></i>
+      <span class="font-monospace">{{ currentTimePKT() }}</span>
+    </div>
+
+    <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <i class="fa-solid fa-bars-staggered" [style.color]="'var(--text-color)'"></i>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav me-auto align-items-center">
+      <ul class="navbar-nav ms-auto align-items-center gap-3">
         <li class="nav-item">
-          <a class="nav-link fw-500" routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+          <a class="nav-link px-3 py-2 rounded-pill fw-medium" routerLink="/home" routerLinkActive="active">Discovery</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link fw-500" routerLink="/search" routerLinkActive="active">Search</a>
+          <a class="nav-link px-3 py-2 rounded-pill fw-medium" routerLink="/search" routerLinkActive="active">Explore</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link fw-500" routerLink="/about-us" routerLinkActive="active">About Us</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link fw-500" routerLink="/leaderboard" routerLinkActive="active">Leaderboard</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link fw-500" routerLink="/verify-coupon" routerLinkActive="active">Verify Coupon</a>
+          <a class="nav-link px-3 py-2 rounded-pill fw-medium" routerLink="/leaderboard" routerLinkActive="active">Wall of Fame</a>
         </li>
         <li class="nav-item" *ngIf="isAdmin">
-          <a class="nav-link fw-bold p-2 px-3 rounded-pill bg-danger bg-opacity-10 text-danger ms-lg-3" 
-             routerLink="/admin-panel" routerLinkActive="active" 
-             style="border: 1px dashed rgba(220, 38, 38, 0.3);">
-            <i class="fa-solid fa-shield-halved me-1"></i> Admin Portal
+          <a class="nav-link px-3 py-2 rounded-pill fw-medium text-danger" routerLink="/admin-panel" routerLinkActive="active">
+            <i class="fa-solid fa-shield-halved me-1"></i> Admin
           </a>
         </li>
+
+        <!-- Auth Section -->
+        <div class="d-flex align-items-center gap-3 ms-lg-3">
+          <ng-container *ngIf="!(authService.isLoggedIn$ | async)">
+            <button class="btn btn-outline-danger rounded-pill px-4 fw-bold" routerLink="/auth">Login</button>
+            <button class="btn btn-primary-custom rounded-pill px-4 fw-bold" routerLink="/auth" [queryParams]="{mode: 'signup'}">Join Elite</button>
+          </ng-container>
+
+          <ng-container *ngIf="authService.isLoggedIn$ | async">
+            <div class="dropdown">
+              <button class="btn btn-outline-secondary rounded-pill d-flex align-items-center gap-2 px-3 dropdown-toggle" 
+                      type="button" data-bs-toggle="dropdown" style="background: var(--input-bg); color: var(--text-color); border-color: var(--glass-border)">
+                <i class="fa-solid fa-user-circle"></i> 
+                <span class="fw-bold cursor-pointer" routerLink="/my-account" style="text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(220, 38, 38, 0.3);">{{ authService.getUserName() }}</span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end glass-panel mt-2 p-2">
+                <li><a class="dropdown-item rounded" routerLink="/my-account"><i class="fa-solid fa-gear me-2"></i>My Account</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><button class="dropdown-item text-danger rounded" (click)="authService.logout()"><i class="fa-solid fa-right-from-bracket me-2"></i>Logout</button></li>
+              </ul>
+            </div>
+          </ng-container>
+
+          <!-- Theme Toggle -->
+          <button class="btn rounded-circle p-2 theme-toggle-btn shadow-inner" (click)="toggleTheme()" 
+                  [style.background]="isDarkMode() ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'">
+            <i class="fa-solid" [ngClass]="isDarkMode() ? 'fa-sun text-warning' : 'fa-moon text-primary'"></i>
+          </button>
+        </div>
       </ul>
-
-      <div class="d-flex align-items-center gap-3">
-        <!-- Live PKT Clock -->
-        <span class="badge rounded-pill glass-panel fw-normal d-flex align-items-center gap-2 px-3 py-2" style="color: var(--text-color);">
-          <i class="fa-solid fa-clock text-warning"></i> PKT: {{ currentTimePKT() }}
-        </span>
-
-        <!-- Theme Toggle -->
-        <button class="btn btn-sm glass-panel text-muted rounded-circle p-2 d-flex align-items-center justify-content-center" 
-                style="width: 36px; height: 36px;" (click)="toggleTheme()">
-          <i class="fa-solid" [ngClass]="isDarkMode() ? 'fa-sun text-warning' : 'fa-moon text-primary'"></i>
-        </button>
-
-        <ng-container *ngIf="authService.isLoggedIn$ | async; else loggedOut">
-          <a class="nav-link" routerLink="/add" routerLinkActive="text-danger fw-bold" title="Add Restaurant">
-            <i class="fa-solid fa-plus-circle fs-5"></i>
-          </a>
-          
-          <div class="dropdown">
-            <button class="btn btn-outline-secondary rounded-pill d-flex align-items-center gap-2 px-3 dropdown-toggle" 
-                    type="button" data-bs-toggle="dropdown" style="background: var(--input-bg); color: var(--text-color); border-color: var(--glass-border)">
-              <i class="fa-solid fa-user-circle"></i> 
-              <span class="fw-bold cursor-pointer" routerLink="/my-account" style="text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(220, 38, 38, 0.3);">{{ authService.getUserName() }}</span>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end glass-panel mt-2 p-2">
-              <li><a class="dropdown-item rounded" routerLink="/my-account"><i class="fa-solid fa-gear me-2"></i>My Account</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><button class="dropdown-item text-danger rounded" (click)="authService.logout()"><i class="fa-solid fa-right-from-bracket me-2"></i>Logout</button></li>
-            </ul>
-          </div>
-        </ng-container>
-
-        <ng-template #loggedOut>
-          <a class="btn btn-primary-custom" routerLink="/auth"><i class="fa-solid fa-right-to-bracket me-2"></i>Login</a>
-        </ng-template>
-        
-        <button *ngIf="authService.isLoggedIn$ | async" 
-                class="btn btn-outline-danger rounded-pill px-3 py-2 d-flex align-items-center gap-2"
-                (click)="authService.logout()">
-          <i class="fa-solid fa-power-off"></i> <span class="d-none d-md-inline">Logout</span>
         </button>
       </div>
     </div>

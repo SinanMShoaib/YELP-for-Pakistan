@@ -57,8 +57,8 @@ export class AuthComponent implements OnInit, AfterViewInit, OnDestroy {
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
     
-    this.tiltX = (y - centerY) / 20;
-    this.tiltY = -(x - centerX) / 20;
+    this.tiltX = (y - centerY) / 60; // Significantly reduced sensitivity
+    this.tiltY = -(x - centerX) / 60;
   }
 
   ngOnInit() {
@@ -126,8 +126,8 @@ export class AuthComponent implements OnInit, AfterViewInit, OnDestroy {
       this.shapes.push(mesh);
     }
 
-    // The Torch Light
-    this.torchLight = new THREE.PointLight(0xd32f2f, 15, 20); // Maroon/Red light
+    // The Torch Light - Reduced intensity for a more subtle glow
+    this.torchLight = new THREE.PointLight(0xd32f2f, 5, 25); 
     this.torchLight.position.set(0, 0, 2);
     this.scene.add(this.torchLight);
 
