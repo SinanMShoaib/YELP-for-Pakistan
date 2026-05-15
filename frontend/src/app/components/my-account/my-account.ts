@@ -20,7 +20,7 @@ export class MyAccountComponent implements OnInit {
   redeemedCoupon: any = null;
 
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private api: ApiService,
     private http: HttpClient
   ) {}

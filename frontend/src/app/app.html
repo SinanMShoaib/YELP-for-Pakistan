@@ -27,7 +27,11 @@
           <a class="nav-link fw-500" routerLink="/verify-coupon" routerLinkActive="active">Verify Coupon</a>
         </li>
         <li class="nav-item" *ngIf="isAdmin">
-          <a class="nav-link text-danger fw-bold" routerLink="/admin-panel" routerLinkActive="active">Admin Panel</a>
+          <a class="nav-link fw-bold p-2 px-3 rounded-pill bg-danger bg-opacity-10 text-danger ms-lg-3" 
+             routerLink="/admin-panel" routerLinkActive="active" 
+             style="border: 1px dashed rgba(220, 38, 38, 0.3);">
+            <i class="fa-solid fa-shield-halved me-1"></i> Admin Portal
+          </a>
         </li>
       </ul>
 
@@ -62,8 +66,14 @@
         </ng-container>
 
         <ng-template #loggedOut>
-          <a class="btn btn-primary-custom" routerLink="/auth">Login</a>
+          <a class="btn btn-primary-custom" routerLink="/auth"><i class="fa-solid fa-right-to-bracket me-2"></i>Login</a>
         </ng-template>
+        
+        <button *ngIf="authService.isLoggedIn$ | async" 
+                class="btn btn-outline-danger rounded-pill px-3 py-2 d-flex align-items-center gap-2"
+                (click)="authService.logout()">
+          <i class="fa-solid fa-power-off"></i> <span class="d-none d-md-inline">Logout</span>
+        </button>
       </div>
     </div>
   </div>

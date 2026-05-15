@@ -49,21 +49,27 @@
       </form>
       <div class="glass-panel p-4 mb-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-          <h3 class="fw-bold text-white mb-0">My Loyalty Status</h3>
+          <h3 class="fw-bold mb-0" style="color: var(--text-color);">My Loyalty Status</h3>
           <span class="badge bg-danger p-2 px-3 fs-6">
             <i class="fa-solid fa-coins me-2"></i>{{ user.fitHaeTokens }} Tokens
           </span>
         </div>
-        <p class="text-secondary small mb-4">Earn 1 token for every restaurant you add that gets approved by an admin!</p>
+        <p style="color: var(--text-muted);" class="small mb-4">Earn 1 token for every restaurant you add that gets approved by an admin!</p>
         <button class="btn btn-primary-custom w-100" (click)='redeemTokens()' [disabled]="user.fitHaeTokens < 1">
           REDEEM 1 TOKEN FOR A 15% OFF COUPON
         </button>
 
-        <div *ngIf="redeemedCoupon" class="mt-4 p-3 rounded bg-dark border border-success animate-fade-in">
+        <div *ngIf="redeemedCoupon" class="mt-4 p-3 rounded glass-panel border-success animate-fade-in">
           <h5 class="text-success fw-bold"><i class="fa-solid fa-check-circle me-2"></i>Coupon Generated!</h5>
-          <p class="text-white mb-1">ID: <span class="fw-bold">{{ redeemedCoupon.couponId }}</span></p>
-          <p class="text-secondary small mb-0">Valid for 30 days at any FitHae partner.</p>
+          <p style="color: var(--text-color);" class="mb-1">ID: <span class="fw-bold">{{ redeemedCoupon.couponId }}</span></p>
+          <p style="color: var(--text-muted);" class="small mb-0">Valid for 30 days at any FitHae partner.</p>
         </div>
+      </div>
+
+      <div class="d-grid mt-4">
+        <button class="btn btn-outline-danger fw-bold py-2 rounded-pill" (click)="authService.logout()">
+          SIGN OUT SECURELY <i class="fa-solid fa-right-from-bracket ms-2"></i>
+        </button>
       </div>
 
       <div class="glass-panel p-4 overflow-hidden">

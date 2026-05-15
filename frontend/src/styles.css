@@ -76,9 +76,14 @@ body {
   background-color: var(--input-bg);
   border: 1px solid var(--glass-border);
   color: var(--text-color);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 0.75rem 1rem;
   transition: var(--transition);
+}
+
+.form-select option {
+  background-color: var(--bg-card);
+  color: var(--text-color);
 }
 
 .form-control:focus, .form-select:focus {

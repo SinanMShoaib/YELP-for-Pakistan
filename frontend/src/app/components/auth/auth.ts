@@ -177,7 +177,7 @@ export class AuthComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.isLoginMode) {
       this.authService.login({ email: this.authData.email, password: this.authData.password }).subscribe({
         next: () => {
-          this.router.navigate(['/search']);
+          this.router.navigate(['/home']);
         },
         error: (err) => {
           this.error = err.error.message || 'Login failed. Check your credentials.';
@@ -185,11 +185,17 @@ export class AuthComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       });
     } else {
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      if (!passwordRegex.test(this.authData.password)) {
+        this.error = "Security Policy: Password must be 8+ chars with Uppercase, Lowercase, Number & Special Character (@$!%*?&).";
+        this.isLoading = false;
+        return;
+      }
       this.authService.signup(this.authData).subscribe({
         next: () => {
           this.isLoginMode = true; 
           this.isLoading = false;
-          alert('Account created! Please login.');
+          alert('Account created! Default Admin: admin@fithae.com / Admin@123');
         },
         error: (err) => {
           this.error = err.error.message || 'Signup failed.';
