@@ -50,77 +50,64 @@ router.get('/download/:couponId', auth, async (req, res) => {
             
         if (!coupon) return res.status(404).json({ message: "Coupon not found or unauthorized." });
 
-        const width = 800;
-        const height = 400;
+        const width = 1200; 
+        const height = 600;
         const canvas = createCanvas(width, height);
         const ctx = canvas.getContext('2d');
 
-        // LUXURY BACKGROUND
-        const grad = ctx.createLinearGradient(0, 0, width, height);
-        grad.addColorStop(0, '#0a0a0a');
-        grad.addColorStop(0.5, '#1a1a1a');
-        grad.addColorStop(1, '#0a0a0a');
-        ctx.fillStyle = grad;
+        // LOAD LUXURY BACKGROUND
+        try {
+            const bg = await loadImage('assets/luxury-bg.png');
+            ctx.drawImage(bg, 0, 0, width, height);
+        } catch (e) {
+            const grad = ctx.createLinearGradient(0, 0, width, height);
+            grad.addColorStop(0, '#0f0f0f');
+            grad.addColorStop(1, '#1a1a1a');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, width, height);
+        }
+
+        // GLASS OVERLAY
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
         ctx.fillRect(0, 0, width, height);
 
-        // GOLDEN BORDER
+        // GOLDEN FRAME
         ctx.strokeStyle = '#d4af37';
-        ctx.lineWidth = 15;
-        ctx.strokeRect(20, 20, width - 40, height - 40);
-        
-        // INNER GLOW BORDER
-        ctx.strokeStyle = 'rgba(212, 175, 55, 0.2)';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(35, 35, width - 70, height - 70);
+        ctx.lineWidth = 25;
+        ctx.strokeRect(30, 30, width - 60, height - 60);
+
+        // SHADOW HELPER
+        const drawTextWithShadow = (text, x, y, font, color, align = 'center') => {
+            ctx.textAlign = align;
+            ctx.font = font;
+            ctx.shadowColor = 'rgba(0,0,0,0.9)';
+            ctx.shadowBlur = 20;
+            ctx.fillStyle = color;
+            ctx.fillText(text, x, y);
+            ctx.shadowBlur = 0; 
+        };
 
         // BRANDING
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 50px sans-serif';
-        ctx.textAlign = 'left';
-        ctx.fillText('FitHae', 60, 100);
-        
-        ctx.fillStyle = '#d4af37';
-        ctx.font = '700 20px sans-serif';
-        ctx.fillText('PRIVILEGE PASS', 60, 135);
+        drawTextWithShadow('FitHae', 100, 140, 'bold 80px Arial', '#ffffff', 'left');
+        drawTextWithShadow('PRIVILEGE PASS', 100, 190, 'bold 28px Arial', '#d4af37', 'left');
 
-        // DISCOUNT MAIN TEXT
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 90px sans-serif';
-        ctx.textAlign = 'right';
-        ctx.fillText('15% OFF', width - 60, 140);
+        // DISCOUNT
+        drawTextWithShadow('15% OFF', width - 100, 200, 'bold 140px Arial', '#ffffff', 'right');
 
-        // USER NAME SECTION
-        ctx.fillStyle = 'rgba(255,255,255,0.05)';
-        ctx.fillRect(60, 180, width - 120, 100);
+        // HOLDER INFO
+        ctx.fillStyle = 'rgba(255,255,255,0.08)';
+        ctx.fillRect(100, 270, width - 200, 160);
         
-        ctx.fillStyle = '#d4af37';
-        ctx.font = '14px sans-serif';
-        ctx.textAlign = 'left';
-        ctx.fillText('PASS HOLDER', 80, 210);
-        
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 32px sans-serif';
-        ctx.fillText(coupon.userId.name.toUpperCase(), 80, 250);
+        drawTextWithShadow('PASS HOLDER', 130, 315, 'bold 24px Arial', '#d4af37', 'left');
+        drawTextWithShadow(coupon.userId.name.toUpperCase(), 130, 385, 'bold 55px Arial', '#ffffff', 'left');
 
-        // VOUCHER DETAILS
-        ctx.fillStyle = '#888888';
-        ctx.font = '14px sans-serif';
-        ctx.textAlign = 'right';
-        ctx.fillText('VOUCHER ID', width - 80, 210);
-        
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 24px sans-serif';
-        ctx.fillText(coupon.couponId, width - 80, 250);
+        // VOUCHER ID
+        drawTextWithShadow('VOUCHER ID', width - 130, 315, 'bold 24px Arial', '#d4af37', 'right');
+        drawTextWithShadow(coupon.couponId, width - 130, 385, 'bold 45px Arial', '#ffffff', 'right');
 
         // FOOTER
-        ctx.fillStyle = 'rgba(212, 175, 55, 0.5)';
-        ctx.font = 'italic 16px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('Redeemable at any FitHae partner restaurant. Valid for 30 days.', width/2, 340);
-
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 22px sans-serif';
-        ctx.fillText('Fit Hai Boss!', width/2, 370);
+        drawTextWithShadow('Redeemable at any Partner Restaurant • Fit Hai Boss!', width / 2, 520, 'italic bold 32px Arial', '#ffffff');
+        drawTextWithShadow('Valid through: ' + coupon.expiryDate.toDateString(), width / 2, 560, '18px Arial', 'rgba(255,255,255,0.6)');
 
         const buffer = canvas.toBuffer('image/png');
         res.set('Content-Type', 'image/png');

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Restaurant = require('../models/Restaurants'); 
-const User = require('../models/User'); // Import User model to get the name
+const User = require('../models/User'); 
 const { Client } = require("@googlemaps/google-maps-services-js");
 const axios = require('axios');
 const auth = require('../middleware/auth');
@@ -12,48 +12,23 @@ const { createCanvas, loadImage } = require('canvas');
 // --- HELPER: AUTO-DETECT CITY (LOWERCASE) ---
 const detectCity = (address) => {
     const addressLower = address.toLowerCase();
-    
     if (addressLower.includes('islamabad')) return 'islamabad';
     if (addressLower.includes('lahore')) return 'lahore';
     if (addressLower.includes('karachi')) return 'karachi';
-    // Handle both 'pindi' and 'rawalpindi'
-    if (addressLower.includes('rawalpindi') || addressLower.includes('pindi')) {
-        return 'rawalpindi';
-    }
-    
+    if (addressLower.includes('rawalpindi') || addressLower.includes('pindi')) return 'rawalpindi';
     return null; 
 };
 
 // --- 1. SEARCH & GET ROUTES ---
-
-// --- 1. SEARCH & GET ROUTES ---
-
 router.get('/search', async (req, res) => {
     try {
         const { name, city, price, category, amenity } = req.query;
-        // Only return approved restaurants for public search
         let query = { status: 'Approved' };
-
-        if (city && city.trim() !== "") {
-            query.city = { $regex: `^${city}$`, $options: 'i' }; 
-        }
-
-        if (name && name.trim() !== "") {
-            query.name = { $regex: name, $options: 'i' };
-        }
-
-        if (price) {
-            query.priceRange = price;
-        }
-
-        if (category) {
-            query.categories = { $in: [category] };
-        }
-
-        if (amenity) {
-            query.amenities = { $in: [amenity] };
-        }
-
+        if (city && city.trim() !== "") query.city = { $regex: `^${city}$`, $options: 'i' }; 
+        if (name && name.trim() !== "") query.name = { $regex: name, $options: 'i' };
+        if (price) query.priceRange = price;
+        if (category) query.categories = { $in: [category] };
+        if (amenity) query.amenities = { $in: [amenity] };
         const restaurants = await Restaurant.find(query);
         res.json(restaurants);
     } catch (err) {
@@ -61,13 +36,10 @@ router.get('/search', async (req, res) => {
     }
 });
 
-// GET Leaderboard
 router.get('/leaderboard', async (req, res) => {
     try {
         const topContributors = await User.find({ fitHaeTokens: { $gt: 0 } })
-            .sort({ fitHaeTokens: -1 })
-            .limit(10)
-            .select('username fitHaeTokens profileImage');
+            .sort({ fitHaeTokens: -1 }).limit(10).select('username fitHaeTokens profileImage');
         res.json(topContributors);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -77,17 +49,14 @@ router.get('/leaderboard', async (req, res) => {
 router.get('/:id', async (req, res) => {
     try {
         const restaurant = await Restaurant.findById(req.params.id);
-        if (!restaurant) {
-            return res.status(404).json({ message: 'Restaurant not found' });
-        }
+        if (!restaurant) return res.status(404).json({ message: 'Restaurant not found' });
         res.json(restaurant);
     } catch (err) {
         res.status(500).json({ message: 'Invalid ID format' });
     }
 });
 
-// --- 2. GOOGLE MAPS ONBOARDING ROUTE ---
-
+// --- 2. ONBOARDING ---
 router.post('/add', auth, async (req, res) => {
     try {
         const { googleMapsLink, manualData } = req.body;
@@ -95,161 +64,82 @@ router.post('/add', auth, async (req, res) => {
         if (!user) return res.status(404).json({ message: "User not found." });
 
         let restaurantData = {};
-
         if (googleMapsLink) {
-            // --- Google Maps Automated Detection ---
-            const resolveResponse = await axios.get(googleMapsLink, { 
-                maxRedirects: 5,
-                headers: { 'User-Agent': 'Mozilla/5.0' } 
-            });
+            const resolveResponse = await axios.get(googleMapsLink, { maxRedirects: 5, headers: { 'User-Agent': 'Mozilla/5.0' } });
             const longUrl = resolveResponse.request.res.responseUrl;
             const namePart = longUrl.split('/place/')[1]?.split('/')[0];
             const restaurantName = decodeURIComponent(namePart || '').replace(/\+/g, ' ');
-
-            if (!restaurantName) {
-                return res.status(400).json({ message: "Could not detect restaurant name from link." });
-            }
+            if (!restaurantName) return res.status(400).json({ message: "Could not detect restaurant name." });
 
             const googleSearch = await client.findPlaceFromText({
-                params: {
-                    input: restaurantName,
-                    inputtype: 'textquery',
-                    fields: ['name', 'formatted_address', 'photos'],
-                    key: process.env.GOOGLE_MAPS_API_KEY
-                }
+                params: { input: restaurantName, inputtype: 'textquery', fields: ['name', 'formatted_address', 'photos'], key: process.env.GOOGLE_MAPS_API_KEY }
             });
-
             const place = googleSearch.data.candidates[0];
-            if (!place) {
-                return res.status(404).json({ message: "No matching restaurant found on Google Maps." });
-            }
+            if (!place) return res.status(404).json({ message: "No matching restaurant found." });
 
             const detectedCity = detectCity(place.formatted_address);
-            if (!detectedCity) {
-                return res.status(400).json({ 
-                    message: "This restaurant is outside our supported cities (Islamabad, Rawalpindi, Lahore, Karachi)." 
-                });
-            }
+            if (!detectedCity) return res.status(400).json({ message: "City not supported." });
 
             let photoUrl = 'assets/default-restaurant.jpg'; 
             if (place.photos && place.photos.length > 0) {
-                const photoReference = place.photos[0].photo_reference;
-                photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=${photoReference}&key=${process.env.GOOGLE_MAPS_API_KEY}`;
+                photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=${place.photos[0].photo_reference}&key=${process.env.GOOGLE_MAPS_API_KEY}`;
             }
 
-            restaurantData = {
-                name: place.name,
-                location: place.formatted_address,
-                city: detectedCity,
-                imageUrl: photoUrl,
-                description: `A top-rated spot in ${detectedCity}, added by our community.`
-            };
+            restaurantData = { name: place.name, location: place.formatted_address, city: detectedCity, imageUrl: photoUrl, description: `A top-rated spot in ${detectedCity}.` };
         } else if (manualData) {
-            // --- Manual Submission ---
-            if (!manualData.name || !manualData.location || !manualData.city) {
-                return res.status(400).json({ message: "Name, Location, and City are required for manual entry." });
-            }
-            restaurantData = {
-                name: manualData.name,
-                location: manualData.location,
-                city: manualData.city.toLowerCase(),
-                imageUrl: manualData.imageUrl || 'assets/default-restaurant.jpg',
-                description: manualData.description || `A new discovery in ${manualData.city}.`
-            };
-        } else {
-            return res.status(400).json({ message: "Either Google Maps link or manual data is required." });
+            restaurantData = { name: manualData.name, location: manualData.location, city: manualData.city.toLowerCase(), imageUrl: manualData.imageUrl || 'assets/default-restaurant.jpg', description: manualData.description || `A new discovery.` };
         }
 
-        const newRestaurant = new Restaurant({
-            ...restaurantData,
-            addedBy: {
-                userId: user._id,
-                userName: user.username || user.name
-            },
-            status: 'Pending Review'
-        });
-
-        const savedRestaurant = await newRestaurant.save();
-        res.status(201).json({ 
-            message: "Submission received! Admin will review and approve it soon.", 
-            restaurant: savedRestaurant 
-        });
-
+        const newRestaurant = new Restaurant({ ...restaurantData, addedBy: { userId: user._id, userName: user.username || user.name }, status: 'Pending Review' });
+        await newRestaurant.save();
+        res.status(201).json({ message: "Submission received! Admin will review soon." });
     } catch (err) {
-        console.error("ADD RESTAURANT ERROR:", err.message);
-        res.status(500).json({ 
-            message: "Failed to process submission.",
-            error: err.message 
-        });
+        res.status(500).json({ message: "Failed to process submission.", error: err.message });
     }
 });
 
-// GET user's restaurant submissions
 router.get('/user/submissions', auth, async (req, res) => {
     try {
-        const submissions = await Restaurant.find({ 'addedBy.userId': req.user.id })
-            .sort({ createdAt: -1 });
+        const submissions = await Restaurant.find({ 'addedBy.userId': req.user.id }).sort({ createdAt: -1 });
         res.json(submissions);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 });
 
-// --- 3. ADMIN ROUTES ---
-
-// Middleware to check if user is admin
+// --- 3. ADMIN ---
 const isAdmin = async (req, res, next) => {
     try {
         const user = await User.findById(req.user.id);
-        if (user && user.role === 'admin') {
-            next();
-        } else {
-            res.status(403).json({ message: "Access denied. Admin only." });
-        }
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+        if (user && user.role === 'admin') next();
+        else res.status(403).json({ message: "Access denied. Admin only." });
+    } catch (err) { res.status(500).json({ message: err.message }); }
 };
 
-// GET all unverified restaurants (Admin only)
 router.get('/admin/pending', auth, isAdmin, async (req, res) => {
     try {
         const pendingRestaurants = await Restaurant.find({ status: 'Pending Review' });
         res.json(pendingRestaurants);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+    } catch (err) { res.status(500).json({ message: err.message }); }
 });
 
-// PATCH to verify or reject a restaurant (Admin only)
 router.patch('/:id/verify', auth, isAdmin, async (req, res) => {
     try {
         const { action } = req.body; 
-        const restaurantId = req.params.id;
-
-        const restaurant = await Restaurant.findById(restaurantId);
+        const restaurant = await Restaurant.findById(req.params.id);
         if (!restaurant) return res.status(404).json({ message: "Restaurant not found" });
 
         if (action === 'approve') {
             restaurant.status = 'Approved';
             await restaurant.save();
-
-            // Award 1 FitHae Token to the contributor
-            if (restaurant.addedBy && restaurant.addedBy.userId) {
-                await User.findByIdAndUpdate(restaurant.addedBy.userId, { $inc: { fitHaeTokens: 1 } });
-            }
-
-            res.json({ message: "Restaurant approved. 1 FitHae Token awarded to contributor.", restaurant });
-        } else if (action === 'reject') {
+            if (restaurant.addedBy?.userId) await User.findByIdAndUpdate(restaurant.addedBy.userId, { $inc: { fitHaeTokens: 1 } });
+            res.json({ message: "Restaurant approved." });
+        } else {
             restaurant.status = 'Rejected';
             await restaurant.save();
             res.json({ message: "Restaurant rejected." });
-        } else {
-            res.status(400).json({ message: "Invalid action. Use 'approve' or 'reject'." });
         }
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+    } catch (err) { res.status(500).json({ message: err.message }); }
 });
 
 // GET Branded Review Card with QR Code
@@ -258,82 +148,67 @@ router.get('/:id/qr', auth, isAdmin, async (req, res) => {
         const restaurant = await Restaurant.findById(req.params.id);
         if (!restaurant) return res.status(404).json({ message: "Restaurant not found" });
 
-        const reviewUrl = `https://fithae.com/restaurant/${restaurant._id}`; // Base URL should be dynamic in prod
-        
-        // Generate QR Code
-        const qrDataUrl = await QRCode.toDataURL(reviewUrl, { margin: 1, width: 200 });
+        const reviewUrl = `https://fithae.com/restaurant/${restaurant._id}`; 
+        const qrDataUrl = await QRCode.toDataURL(reviewUrl, { margin: 1, width: 300 });
 
-        // Create a Branded Card using Canvas
-        const width = 400;
-        const height = 600;
+        const width = 600;
+        const height = 900;
         const canvas = createCanvas(width, height);
         const ctx = canvas.getContext('2d');
 
-        // Background Gradient
-        const grad = ctx.createLinearGradient(0, 0, width, height);
-        grad.addColorStop(0, '#0f0f0f');
-        grad.addColorStop(1, '#1a1a1a');
-        ctx.fillStyle = grad;
+        // LOAD LUXURY BACKGROUND
+        try {
+            const bg = await loadImage('assets/luxury-bg.png');
+            ctx.drawImage(bg, 0, 0, width, height);
+        } catch (e) {
+            ctx.fillStyle = '#0f0f0f';
+            ctx.fillRect(0, 0, width, height);
+        }
+
+        // GLASS OVERLAY
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
         ctx.fillRect(0, 0, width, height);
 
-        // Border - Sleek Double Border
-        ctx.strokeStyle = '#d32f2f';
-        ctx.lineWidth = 4;
-        ctx.strokeRect(15, 15, width - 30, height - 30);
-        ctx.strokeStyle = 'rgba(211, 47, 47, 0.3)';
-        ctx.lineWidth = 1;
+        // GOLDEN FRAME
+        ctx.strokeStyle = '#d4af37';
+        ctx.lineWidth = 20;
         ctx.strokeRect(20, 20, width - 40, height - 40);
 
-        // Header Text - FitHae Branding
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 42px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('FitHae', width / 2, 80);
+        // SHADOW HELPER
+        const drawText = (text, x, y, font, color) => {
+            ctx.textAlign = 'center';
+            ctx.font = font;
+            ctx.shadowColor = 'black';
+            ctx.shadowBlur = 10;
+            ctx.fillStyle = color;
+            ctx.fillText(text, x, y);
+            ctx.shadowBlur = 0;
+        };
 
-        ctx.fillStyle = '#d32f2f';
-        ctx.font = '700 18px sans-serif';
-        ctx.fillText('OFFICIAL REVIEW ASSET', width / 2, 110);
+        drawText('FitHae', width / 2, 100, 'bold 60px Arial', '#ffffff');
+        drawText('OFFICIAL REVIEW CARD', width / 2, 140, 'bold 18px Arial', '#d4af37');
 
-        // Restaurant Name Section
+        // Restaurant Name
         ctx.fillStyle = 'rgba(255,255,255,0.05)';
-        ctx.fillRect(40, 140, width - 80, 80);
-        
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 28px sans-serif';
-        ctx.fillText(restaurant.name.toUpperCase(), width / 2, 185);
+        ctx.fillRect(50, 180, width - 100, 120);
+        drawText(restaurant.name.toUpperCase(), width / 2, 255, 'bold 36px Arial', '#ffffff');
 
-        // QR Code - With White Rounded Background for better scanability
+        // QR Background
         ctx.fillStyle = '#ffffff';
         ctx.beginPath();
-        ctx.roundRect(width / 2 - 110, 240, 220, 220, 20);
+        ctx.roundRect(width / 2 - 160, 340, 320, 320, 30);
         ctx.fill();
 
         const qrImage = await loadImage(qrDataUrl);
-        ctx.drawImage(qrImage, width / 2 - 100, 250, 200, 200);
+        ctx.drawImage(qrImage, width / 2 - 150, 350, 300, 300);
 
-        // Footer Instructions
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 20px sans-serif';
-        ctx.fillText('SCAN TO RATE', width / 2, 500);
+        drawText('SCAN TO RATE & REVIEW', width / 2, 730, 'bold 24px Arial', '#ffffff');
+        drawText('Fit Hai Boss!', width / 2, 830, 'italic bold 32px Arial', '#d32f2f');
 
-        ctx.fillStyle = '#888888';
-        ctx.font = '14px sans-serif';
-        ctx.fillText('Earn tokens for every review!', width / 2, 525);
-
-        // Signature
-        ctx.fillStyle = '#d32f2f';
-        ctx.font = 'italic bold 24px sans-serif';
-        ctx.fillText('Fit Hai Boss!', width / 2, 570);
-
-        // Stream the result
         const buffer = canvas.toBuffer('image/png');
         res.set('Content-Type', 'image/png');
         res.send(buffer);
-
-    } catch (err) {
-        console.error("QR GEN ERROR:", err);
-        res.status(500).json({ message: "Failed to generate QR card." });
-    }
+    } catch (err) { res.status(500).json({ message: "Failed to generate QR card." }); }
 });
 
 module.exports = router;
