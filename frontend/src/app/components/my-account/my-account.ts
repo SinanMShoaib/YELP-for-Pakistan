@@ -91,9 +91,21 @@ export class MyAccountComponent implements OnInit {
       next: (res) => {
         this.redeemedCoupon = res.coupon;
         this.user.fitHaeTokens = res.remainingTokens;
-        alert("Coupon Redeemed! Check your profile for the code.");
+        alert("Coupon Redeemed! You can now download your Privilege Pass.");
       },
       error: (err) => alert(err.error?.message || "Redemption failed")
+    });
+  }
+
+  downloadCoupon(couponId: string) {
+    this.http.get(`/api/coupons/download/${couponId}`, { responseType: 'blob' }).subscribe({
+      next: (blob: Blob) => {
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = `FitHae_Coupon_${couponId}.png`;
+        link.click();
+      },
+      error: (err) => alert("Failed to download coupon card.")
     });
   }
 }
