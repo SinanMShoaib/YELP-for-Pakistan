@@ -34,6 +34,11 @@
         <li class="nav-item">
           <a class="nav-link px-3 py-2 rounded-pill fw-medium" routerLink="/leaderboard" routerLinkActive="active">Wall of Fame</a>
         </li>
+        <li class="nav-item" *ngIf="authService.isLoggedIn$ | async">
+          <a class="nav-link px-3 py-2 rounded-pill fw-medium text-success" routerLink="/add" routerLinkActive="active">
+            <i class="fa-solid fa-plus me-1"></i> Add Spot
+          </a>
+        </li>
         <li class="nav-item" *ngIf="isAdmin">
           <a class="nav-link px-3 py-2 rounded-pill fw-medium text-danger" routerLink="/admin-panel" routerLinkActive="active">
             <i class="fa-solid fa-shield-halved me-1"></i> Admin
