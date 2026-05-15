@@ -33,4 +33,21 @@ export class ApiService {
   getReviewsByRestaurant(restaurantId: string): Observable<any> {
     return this.http.get(`/api/reviews/${restaurantId}`);
   }
+
+  // Admin Routes
+  getPendingRestaurants(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/admin/pending`);
+  }
+
+  verifyRestaurant(id: string, action: 'approve' | 'reject'): Observable<any> {
+    return this.http.patch(`${this.baseUrl}/${id}/verify`, { action });
+  }
+
+  getUserSubmissions(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/user/submissions`);
+  }
+
+  getQrCode(id: string): Observable<Blob> {
+    return this.http.get(`/api/restaurants/${id}/qr`, { responseType: 'blob' });
+  }
 }

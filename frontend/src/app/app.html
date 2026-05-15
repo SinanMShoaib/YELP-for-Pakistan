@@ -1,20 +1,70 @@
-<nav *ngIf="router.url !== '/auth'" class="navbar navbar-expand-lg navbar-dark bg-dark shadow-lg border-bottom border-secondary mb-4">
+<nav *ngIf="router.url !== '/auth'" class="navbar navbar-expand-lg glass-panel sticky-top mb-4 px-3" style="border-radius: 0 0 16px 16px;">
   <div class="container">
-    <a class="navbar-brand fw-bold text-warning fs-3" routerLink="/search">YELP <span class="text-white">PK</span></a>
+    <a class="navbar-brand fw-bold fs-3" routerLink="/search" style="color: var(--accent-red)">
+      Fit<span style="color: var(--text-color)">Hae</span>
+    </a>
 
-    <div class="d-flex align-items-center">
-      <a class="nav-link text-secondary me-3" routerLink="/search" routerLinkActive="text-white fw-bold">Search</a>
+    <!-- Mobile Toggle -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-      <ng-container *ngIf="authService.isLoggedIn$ | async; else loggedOut">
-        <a class="nav-link text-secondary me-3" routerLink="/add" routerLinkActive="text-white fw-bold">Add Restaurant</a>
-        <div class="vr bg-secondary mx-2" style="height: 20px;"></div>
-        <span class="text-warning small mx-3">Hi, {{ authService.getUserName() }}</span>
-        <button class="btn btn-outline-danger btn-sm rounded-pill" (click)="authService.logout()">Logout</button>
-      </ng-container>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto align-items-center">
+        <li class="nav-item">
+          <a class="nav-link fw-500" routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-500" routerLink="/search" routerLinkActive="active">Search</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-500" routerLink="/about-us" routerLinkActive="active">About Us</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-500" routerLink="/leaderboard" routerLinkActive="active">Leaderboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-500" routerLink="/verify-coupon" routerLinkActive="active">Verify Coupon</a>
+        </li>
+        <li class="nav-item" *ngIf="isAdmin">
+          <a class="nav-link text-danger fw-bold" routerLink="/admin-panel" routerLinkActive="active">Admin Panel</a>
+        </li>
+      </ul>
 
-      <ng-template #loggedOut>
-        <a class="btn btn-warning btn-sm fw-bold px-4 rounded-pill" routerLink="/auth">LOGIN</a>
-      </ng-template>
+      <div class="d-flex align-items-center gap-3">
+        <!-- Live PKT Clock -->
+        <span class="badge rounded-pill glass-panel text-muted fw-normal d-flex align-items-center gap-2 px-3 py-2">
+          <i class="fa-solid fa-clock text-warning"></i> PKT: {{ currentTimePKT() }}
+        </span>
+
+        <!-- Theme Toggle -->
+        <button class="btn btn-sm glass-panel text-muted rounded-circle p-2 d-flex align-items-center justify-content-center" 
+                style="width: 36px; height: 36px;" (click)="toggleTheme()">
+          <i class="fa-solid" [ngClass]="isDarkMode() ? 'fa-sun text-warning' : 'fa-moon text-primary'"></i>
+        </button>
+
+        <ng-container *ngIf="authService.isLoggedIn$ | async; else loggedOut">
+          <a class="nav-link" routerLink="/add" routerLinkActive="text-danger fw-bold" title="Add Restaurant">
+            <i class="fa-solid fa-plus-circle fs-5"></i>
+          </a>
+          
+          <div class="dropdown">
+            <button class="btn btn-outline-secondary rounded-pill d-flex align-items-center gap-2 px-3 dropdown-toggle" 
+                    type="button" data-bs-toggle="dropdown" style="background: var(--input-bg); color: var(--text-color); border-color: var(--glass-border)">
+              <i class="fa-solid fa-user-circle"></i> {{ authService.getUserName() }}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end glass-panel mt-2 p-2">
+              <li><a class="dropdown-item rounded" routerLink="/my-account"><i class="fa-solid fa-gear me-2"></i>My Account</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><button class="dropdown-item text-danger rounded" (click)="authService.logout()"><i class="fa-solid fa-right-from-bracket me-2"></i>Logout</button></li>
+            </ul>
+          </div>
+        </ng-container>
+
+        <ng-template #loggedOut>
+          <a class="btn btn-primary-custom" routerLink="/auth">Login</a>
+        </ng-template>
+      </div>
     </div>
   </div>
 </nav>
@@ -22,3 +72,8 @@
 <div class="container pb-5">
   <router-outlet></router-outlet>
 </div>
+
+<!-- Custom Cursor Elements -->
+<div class="custom-cursor" [style.transform]="'translate(' + cursorX + 'px, ' + cursorY + 'px)'"></div>
+<div class="cursor-trail" *ngFor="let trail of trails" [style.transform]="'translate(' + trail.x + 'px, ' + trail.y + 'px)'"></div>
+

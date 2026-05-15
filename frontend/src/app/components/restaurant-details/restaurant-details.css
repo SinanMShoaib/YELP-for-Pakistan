@@ -1,0 +1,14 @@
+.fithae-popup-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 5rem;
+  font-weight: 800;
+  color: var(--accent-red);
+  text-shadow: 0 0 20px rgba(211, 47, 47, 0.6);
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0;
+  white-space: nowrap;
+}

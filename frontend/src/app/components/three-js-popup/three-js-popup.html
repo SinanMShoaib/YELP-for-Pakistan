@@ -1,0 +1,8 @@
+<div class="popup-overlay" *ngIf="show">
+  <div class="popup-content glass-panel text-center p-4">
+    <div class="canvas-wrapper" #canvasContainer></div>
+    <h2 class="display-4 fw-bold mt-3" style="color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">FIT HAI!</h2>
+    <p class="lead" style="color: var(--text-color);">Thanks for the 5-star rating!</p>
+    <button class="btn btn-outline-warning rounded-pill px-4 mt-3" (click)="closePopup()">Awesome</button>
+  </div>
+</div>

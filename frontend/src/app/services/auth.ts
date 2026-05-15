@@ -8,6 +8,10 @@ import { Observable, BehaviorSubject, tap } from 'rxjs';
 export class AuthService {
   private baseUrl = '/api/auth';
 
+  getMe(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/me`);
+  }
+
   // Tracks login status for the Navbar
   private loggedIn = new BehaviorSubject<boolean>(!!localStorage.getItem('token'));
   isLoggedIn$ = this.loggedIn.asObservable();
@@ -23,6 +27,8 @@ export class AuthService {
       tap((res: any) => {
         localStorage.setItem('token', res.token);
         localStorage.setItem('userName', res.user.name);
+        localStorage.setItem('userRole', res.user.role || 'user');
+        localStorage.setItem('user', JSON.stringify(res.user));
         this.loggedIn.next(true);
       })
     );
@@ -34,6 +40,24 @@ export class AuthService {
   }
 
   getUserName(): string {
-  return localStorage.getItem('userName') || 'User';
-}
+    return localStorage.getItem('userName') || 'User';
+  }
+
+  getUserRole(): string {
+    return localStorage.getItem('userRole') || 'user';
+  }
+
+  getUser(): any {
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user) : null;
+  }
+
+  updateProfile(profileData: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/profile`, profileData).pipe(
+      tap((res: any) => {
+        localStorage.setItem('userName', res.name);
+        localStorage.setItem('user', JSON.stringify(res));
+      })
+    );
+  }
 }

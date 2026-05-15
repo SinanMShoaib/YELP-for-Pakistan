@@ -13,7 +13,20 @@ const restaurantSchema = new mongoose.Schema({
     },
     averageRating: { type: Number, default: null }, 
     reviewCount: { type: Number, default: 0 },
-    totalStars: { type: Number, default: 0 } 
+    totalStars: { type: Number, default: 0 },
+    categories: [String],
+    priceRange: { type: String, enum: ['$', '$$', '$$$', '$$$$'] },
+    amenities: [String],
+    hours: {
+        monday: { open: String, close: String },
+        tuesday: { open: String, close: String },
+        wednesday: { open: String, close: String },
+        thursday: { open: String, close: String },
+        friday: { open: String, close: String },
+        saturday: { open: String, close: String },
+        sunday: { open: String, close: String }
+    },
+    status: { type: String, enum: ['Pending Review', 'Approved', 'Rejected'], default: 'Pending Review' }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Restaurant', restaurantSchema);

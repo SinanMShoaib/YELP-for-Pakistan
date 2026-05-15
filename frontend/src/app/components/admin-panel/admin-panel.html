@@ -1,0 +1,64 @@
+<div class="row mb-4">
+  <div class="col-12 text-center">
+    <h2 class="display-5 fw-bold" style="color: var(--text-color);">Admin <span style="color: var(--accent-red)">Panel</span></h2>
+    <p class="lead" style="color: var(--text-muted);">Review pending restaurant submissions</p>
+  </div>
+</div>
+
+<div *ngIf="message" class="alert glass-panel mb-4 text-center text-primary">
+  {{ message }}
+</div>
+
+<div class="row g-4" *ngIf="pendingRestaurants.length > 0; else noPending">
+  <div class="col-md-6 col-lg-4" *ngFor="let res of pendingRestaurants">
+    <div class="card glass-panel h-100 border-0 p-3">
+      <img [src]="res.imageUrl || 'assets/default-restaurant.jpg'" class="card-img-top rounded mb-3" style="height: 200px; object-fit: cover;" alt="Restaurant Image">
+      <div class="card-body p-0 d-flex flex-column">
+        <h5 class="card-title fw-bold" style="color: var(--text-color);">{{ res.name }}</h5>
+        <p class="card-text small mb-2" style="color: var(--text-muted);"><i class="fa-solid fa-location-dot text-danger me-1"></i> {{ res.location }}</p>
+        <p class="card-text small mb-3" style="color: var(--text-muted);">Added By: <span class="fw-bold">{{ res.addedBy?.userName || 'Unknown' }}</span></p>
+        
+        <div class="mt-auto d-flex gap-2">
+          <button class="btn btn-success flex-grow-1 fw-bold rounded-pill shadow-sm" (click)="handleAction(res._id, 'approve')">
+            <i class="fa-solid fa-check me-1"></i> Approve
+          </button>
+          <button class="btn btn-danger flex-grow-1 fw-bold rounded-pill shadow-sm" (click)="handleAction(res._id, 'reject')">
+            <i class="fa-solid fa-xmark me-1"></i> Reject
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #noPending>
+  <div class="text-center py-5 glass-panel">
+    <i class="fa-solid fa-clipboard-check fa-4x mb-3 text-success"></i>
+    <h3 style="color: var(--text-color);">All Caught Up!</h3>
+    <p style="color: var(--text-muted);">There are no pending restaurants to review.</p>
+  </div>
+</ng-template>
+
+<hr class="my-5 border-secondary">
+
+<div class="row mb-4">
+  <div class="col-12 text-center">
+    <h2 class="display-6 fw-bold" style="color: var(--text-color);">Approved <span style="color: var(--accent-red)">Restaurants</span></h2>
+    <p class="lead" style="color: var(--text-muted);">Generate and download FitHae Review Cards</p>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-md-6 col-lg-4" *ngFor="let res of approvedRestaurants">
+    <div class="card glass-panel h-100 border-0 p-3">
+      <div class="card-body p-0 d-flex flex-column">
+        <h5 class="card-title fw-bold" style="color: var(--text-color);">{{ res.name }}</h5>
+        <p class="card-text small mb-3" style="color: var(--text-muted);"><i class="fa-solid fa-location-dot text-danger me-1"></i> {{ res.location }}</p>
+        
+        <button class="btn btn-outline-danger w-100 fw-bold rounded-pill shadow-sm" (click)="downloadQr(res._id, res.name)">
+          <i class="fa-solid fa-qrcode me-2"></i> Download Review Card
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

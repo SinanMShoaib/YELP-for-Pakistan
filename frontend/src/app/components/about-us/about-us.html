@@ -1,0 +1,37 @@
+<div class="row mb-5">
+  <div class="col-12 text-center text-white mb-5 mt-3">
+    <h1 class="display-4 fw-bold" style="color: var(--text-color);">Meet the <span style="color: var(--accent-red)">Founders</span></h1>
+    <p class="lead" style="color: var(--text-muted);">The visionaries behind FitHae's enterprise review platform.</p>
+  </div>
+</div>
+
+<div class="row g-4 justify-content-center">
+  <div class="col-md-4" *ngFor="let founder of founders">
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <!-- Front Side -->
+        <div class="flip-card-front glass-panel p-4">
+          <div class="mb-4">
+            <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center" 
+                 style="width: 150px; height: 150px; background: linear-gradient(135deg, var(--accent-maroon), var(--accent-red));">
+              <i class="fa-solid fa-user-tie fa-4x text-white"></i>
+            </div>
+          </div>
+          <h3 class="fw-bold mb-1" style="color: var(--text-color);">{{ founder.name }}</h3>
+          <h6 class="mb-3 fw-bold" style="color: var(--accent-red);">{{ founder.role }}</h6>
+          <p class="text-muted small">Hover to learn more</p>
+        </div>
+        <!-- Back Side -->
+        <div class="flip-card-back glass-panel p-4" style="background: var(--accent-maroon);">
+          <h4 class="fw-bold text-white mb-3">Background</h4>
+          <p class="card-text mb-4 text-white">{{ founder.bio }}</p>
+          <div class="mt-auto">
+            <a [href]="founder.linkedin" target="_blank" class="btn btn-light rounded-pill px-4">
+              <i class="fa-brands fa-linkedin me-2 text-primary"></i> Connect
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

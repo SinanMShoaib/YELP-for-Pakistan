@@ -42,6 +42,28 @@ router.post('/add', auth, async (req, res) => {
     }
 });
 
+// GET recent reviews globally
+router.get('/recent/all', async (req, res) => {
+    try {
+        const recentReviews = await Review.find()
+            .sort({ date: -1 })
+            .limit(5)
+            .populate('restaurantId', 'name imageUrl location'); // Requires Restaurant reference in Review schema
+            // Wait, does Review schema have `ref: 'Restaurant'`? Let's handle it manually if it doesn't.
+        
+        // Actually, let's just fetch and map since we might not have `ref` set up.
+        // We can use an aggregation or simple map loop.
+        const populatedReviews = await Promise.all(recentReviews.map(async (rev) => {
+            const restaurant = await Restaurant.findById(rev.restaurantId).select('name imageUrl location');
+            return { ...rev.toObject(), restaurant };
+        }));
+
+        res.json(populatedReviews);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
 // GET all reviews for a specific restaurant
 router.get('/:restaurantId', async (req, res) => {
     try {

@@ -1,14 +1,16 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../services/api';
-import { AuthService } from '../../services/auth'; // 1. Import AuthService
+import { AuthService } from '../../services/auth';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ThreeJsPopupComponent } from '../three-js-popup/three-js-popup';
+import gsap from 'gsap';
 
 @Component({
   selector: 'app-restaurant-details',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ThreeJsPopupComponent],
   templateUrl: './restaurant-details.html',
   styleUrl: './restaurant-details.css'
 })
@@ -64,6 +66,8 @@ export class RestaurantDetails implements OnInit {
     });
   }
 
+  showThreeJsPopup: boolean = false;
+
   submitReview() {
     // 4. Update validation to match the new flattened variables
     if (!this.newComment || !this.newRating) {
@@ -81,6 +85,13 @@ export class RestaurantDetails implements OnInit {
     this.api.addReview(reviewData).subscribe({
       next: (res: any) => {
         this.reviews.unshift(res);
+        
+        // Show 3D pop-up if 5 stars
+        if (this.newRating === 5) {
+          this.showThreeJsPopup = true;
+          this.triggerFitHaeAnimation();
+        }
+
         this.newComment = ''; // Reset form
         this.newRating = 5;
 
@@ -88,9 +99,20 @@ export class RestaurantDetails implements OnInit {
         const id = this.restaurant._id;
         this.api.getRestaurantById(id).subscribe(data => this.restaurant = data);
 
-        alert('Review posted!');
       },
-      error: (err) => alert(err.error.message || 'Failed to post review.')
+      error: (err) => alert(err.error?.message || 'Failed to post review.')
     });
+  }
+
+  triggerFitHaeAnimation() {
+    const el = document.querySelector('.fithae-popup-text');
+    if (el) {
+      gsap.fromTo(el, 
+        { scale: 0, opacity: 0, y: 50 }, 
+        { scale: 1.5, opacity: 1, y: -50, duration: 1, ease: "back.out(1.7)", onComplete: () => {
+          gsap.to(el, { opacity: 0, delay: 1, duration: 0.5 });
+        }}
+      );
+    }
   }
 }

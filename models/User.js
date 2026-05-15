@@ -3,9 +3,15 @@ const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
+    username: { type: String, unique: true, sparse: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true }
-});
+    password: { type: String, required: true },
+    role: { type: String, enum: ['user', 'admin'], default: 'user' },
+    bio: { type: String, default: '' },
+    profileImage: { type: String, default: '' },
+    fitHaeTokens: { type: Number, default: 0 },
+    bookmarks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Restaurant' }]
+}, { timestamps: true });
 
 // Automatically hash the password before saving it to the database
 userSchema.pre('save', async function() {
