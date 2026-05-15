@@ -9,36 +9,45 @@ import { FormsModule } from '@angular/forms';
   imports: [CommonModule, FormsModule],
   template: `
     <div class="container py-5 page-container d-flex align-items-center justify-content-center" style="min-height: 80vh;">
-      <div class="glass-panel p-5 text-center" style="max-width: 500px; width: 100%;">
-        <h2 class="fw-bold text-white mb-4"><i class="fa-solid fa-ticket text-danger me-2"></i>Verify Coupon</h2>
-        <p class="text-secondary mb-4">Enter the Unique Coupon ID to check its validity and status.</p>
+      <div class="glass-panel p-5 text-center animate-fade-in" style="max-width: 500px; width: 100%;">
+        <h2 class="fw-bold mb-4" style="color: var(--text-color);"><i class="fa-solid fa-ticket text-danger me-2"></i>Verify Coupon</h2>
+        <p style="color: var(--text-muted);" class="mb-4">Enter the Unique Coupon ID to check its validity and status.</p>
 
         <div class="mb-4">
           <input type="text" class="form-control form-control-lg text-center fw-bold" 
                  placeholder="e.g. FITHAE-A1B2C3" 
                  [(ngModel)]="couponId" 
-                 (keyup.enter)="verify()">
+                 (keyup.enter)="verify()"
+                 style="letter-spacing: 2px; text-transform: uppercase;">
         </div>
 
         <button class="btn btn-primary-custom btn-lg w-100 fw-bold" 
                 (click)="verify()" 
                 [disabled]="isLoading || !couponId">
-          {{ isLoading ? 'Verifying...' : 'VERIFY NOW' }}
+          {{ isLoading ? 'VERIFYING SECURITY KEY...' : 'VALIDATE COUPON' }}
         </button>
 
         <div *ngIf="result" class="mt-4 animate-fade-in">
-          <div class="alert" [ngClass]="result.valid ? 'alert-success' : 'alert-danger'">
-            <h4 class="fw-bold mb-1">{{ result.valid ? 'Valid Coupon!' : 'Invalid Coupon' }}</h4>
-            <p class="mb-0">{{ result.message }}</p>
+          <div class="alert glass-panel border-0 shadow-sm" [ngClass]="result.valid ? 'text-success' : 'text-danger'">
+            <h4 class="fw-bold mb-1"><i class="fa-solid me-2" [ngClass]="result.valid ? 'fa-circle-check' : 'fa-circle-xmark'"></i>{{ result.valid ? 'Active Coupon!' : 'Invalid Request' }}</h4>
+            <p class="mb-0 small">{{ result.message }}</p>
           </div>
           
-          <div *ngIf="result.coupon" class="text-start mt-3 p-3 rounded bg-dark border border-secondary">
-            <p class="mb-1 small text-secondary">Redeemed By:</p>
-            <p class="fw-bold text-white">{{ result.coupon.userId?.name }} (@{{ result.coupon.userId?.username }})</p>
-            <p class="mb-1 small text-secondary">Value:</p>
-            <p class="fw-bold text-danger">{{ result.coupon.discountValue }}</p>
-            <p class="mb-1 small text-secondary">Expires:</p>
-            <p class="text-white">{{ result.coupon.expiryDate | date:'mediumDate' }}</p>
+          <div *ngIf="result.coupon" class="text-start mt-3 p-4 glass-panel border-0 shadow-sm">
+            <div class="mb-3">
+              <label class="x-small text-uppercase fw-bold opacity-50" style="color: var(--text-color); font-size: 0.7rem;">Redeemed By</label>
+              <p class="fw-bold m-0" style="color: var(--text-color);">{{ result.coupon.userId?.name }} <span class="fw-normal opacity-75">(@{{ result.coupon.userId?.username }})</span></p>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <label class="x-small text-uppercase fw-bold opacity-50" style="color: var(--text-color); font-size: 0.7rem;">Discount</label>
+                <p class="fw-bold m-0 text-danger fs-4">15% OFF</p>
+              </div>
+              <div class="col-6">
+                <label class="x-small text-uppercase fw-bold opacity-50" style="color: var(--text-color); font-size: 0.7rem;">Expires</label>
+                <p class="m-0" style="color: var(--text-color);">{{ result.coupon.expiryDate | date:'mediumDate' }}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
