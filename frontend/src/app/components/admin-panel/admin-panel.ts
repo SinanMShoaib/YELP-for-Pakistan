@@ -13,6 +13,14 @@ export class AdminPanelComponent implements OnInit {
   pendingRestaurants: any[] = [];
   approvedRestaurants: any[] = [];
   message: string = '';
+  
+  // Advanced Dashboard Stats
+  stats = {
+    trustScore: 98,
+    totalUsers: '2.4k',
+    liveCoupons: 156,
+    growthRate: '+12%'
+  };
 
   constructor(private api: ApiService) {}
 

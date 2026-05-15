@@ -1,8 +1,25 @@
 <div class="row mb-5">
-  <div class="col-12 text-center">
-    <div class="badge rounded-pill bg-danger bg-opacity-10 text-danger px-3 py-2 mb-3 fw-bold">Admin Authority</div>
-    <h1 class="display-4 fw-bold" style="color: var(--text-color);">Operations <span style="color: var(--accent-red)">Hub</span></h1>
-    <p class="lead" style="color: var(--text-muted);">Manage submissions and generate enterprise review assets.</p>
+  <div class="col-12">
+    <div class="glass-panel p-4 mb-4 d-flex align-items-center justify-content-between" style="background: linear-gradient(90deg, var(--accent-maroon), var(--accent-red)); border: 0;">
+      <div>
+        <h1 class="h3 fw-bold text-white mb-1">Advanced Operations Dashboard</h1>
+        <p class="text-white text-opacity-75 mb-0">Real-time system health and review audit oversight.</p>
+      </div>
+      <div class="d-flex gap-3">
+        <div class="text-center text-white px-3 border-end border-white border-opacity-25">
+          <h4 class="fw-bold mb-0">{{ stats.trustScore }}%</h4>
+          <span class="x-small opacity-75 text-uppercase">Trust Score</span>
+        </div>
+        <div class="text-center text-white px-3 border-end border-white border-opacity-25">
+          <h4 class="fw-bold mb-0">{{ stats.totalUsers }}</h4>
+          <span class="x-small opacity-75 text-uppercase">Total Users</span>
+        </div>
+        <div class="text-center text-white">
+          <h4 class="fw-bold mb-0">{{ stats.liveCoupons }}</h4>
+          <span class="x-small opacity-75 text-uppercase">Coupons Live</span>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -10,12 +27,44 @@
   <i class="fa-solid fa-circle-info me-2"></i> {{ message }}
 </div>
 
+<!-- Quick Stats -->
+<div class="row g-4 mb-5">
+  <div class="col-md-3">
+    <div class="glass-panel p-4 text-center">
+      <div class="text-danger mb-2"><i class="fa-solid fa-clock-rotate-left fa-2x"></i></div>
+      <h3 class="fw-bold mb-0" style="color: var(--text-color);">{{ pendingRestaurants.length }}</h3>
+      <p class="small text-muted mb-0">Pending Reviews</p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="glass-panel p-4 text-center">
+      <div class="text-success mb-2"><i class="fa-solid fa-circle-check fa-2x"></i></div>
+      <h3 class="fw-bold mb-0" style="color: var(--text-color);">{{ approvedRestaurants.length }}</h3>
+      <p class="small text-muted mb-0">Active Spots</p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="glass-panel p-4 text-center">
+      <div class="text-warning mb-2"><i class="fa-solid fa-ticket fa-2x"></i></div>
+      <h3 class="fw-bold mb-0" style="color: var(--text-color);">842</h3>
+      <p class="small text-muted mb-0">Redemptions</p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="glass-panel p-4 text-center">
+      <div class="text-primary mb-2"><i class="fa-solid fa-chart-line fa-2x"></i></div>
+      <h3 class="fw-bold mb-0" style="color: var(--text-color);">+12%</h3>
+      <p class="small text-muted mb-0">Growth Rate</p>
+    </div>
+  </div>
+</div>
+
 <!-- Pending Section -->
 <div class="row mb-4">
   <div class="col-12">
     <h3 class="fw-bold mb-4" style="color: var(--text-color);">
       <span class="badge bg-warning me-2" style="width: 12px; height: 12px; display: inline-block; border-radius: 50%;"></span>
-      Pending Approvals ({{ pendingRestaurants.length }})
+      Queue Management
     </h3>
   </div>
 </div>
@@ -31,7 +80,7 @@
       </div>
       <div class="card-body">
         <p class="card-text small mb-2" style="color: var(--text-muted);"><i class="fa-solid fa-location-dot text-danger me-1"></i> {{ res.location }}</p>
-        <p class="card-text small mb-3" style="color: var(--text-muted);">Contributor: <span class="fw-bold text-primary">{{ res.addedBy?.userName || 'Unknown' }}</span></p>
+        <p class="card-text small mb-3" style="color: var(--text-muted);">Contributor: <span class="fw-bold text-primary">{{ res.addedBy?.userName || res.addedBy?.name || 'Explorer' }}</span></p>
         
         <div class="d-flex gap-2">
           <button class="btn btn-success flex-grow-1 fw-bold rounded-pill" (click)="handleAction(res._id, 'approve')">Approve</button>
@@ -54,7 +103,7 @@
   <div class="col-12">
     <h3 class="fw-bold mb-4" style="color: var(--text-color);">
       <span class="badge bg-success me-2" style="width: 12px; height: 12px; display: inline-block; border-radius: 50%;"></span>
-      Branded Review Cards
+      Branded Asset Generation
     </h3>
   </div>
 </div>

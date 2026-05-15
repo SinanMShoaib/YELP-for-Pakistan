@@ -62,6 +62,25 @@ export class MyAccountComponent implements OnInit {
     });
   }
 
+  updatePassword(newPass: string) {
+    if (!newPass || newPass.length < 8) {
+      this.message = "Password must be at least 8 characters.";
+      this.isError = true;
+      return;
+    }
+    // We reuse the updateProfile endpoint or a dedicated one if available
+    this.http.put('/api/auth/profile', { password: newPass }).subscribe({
+      next: () => {
+        this.message = "Password updated successfully!";
+        this.isError = false;
+      },
+      error: (err) => {
+        this.message = "Failed to update password.";
+        this.isError = true;
+      }
+    });
+  }
+
   redeemTokens() {
     if (this.user.fitHaeTokens < 1) {
       alert("You need at least 1 FitHae Token to redeem a coupon!");
