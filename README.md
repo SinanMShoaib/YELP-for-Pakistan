@@ -99,12 +99,28 @@ Video Demo: [UPDATE HERE - Video Link Daalen]
 📸 Screenshots
 
 Home Page (with beautiful 3D Animation)
+<img width="1909" height="992" alt="image" src="https://github.com/user-attachments/assets/ca1af319-d1b7-408d-ac10-2de5a3486731" />
+
 Restaurant Search & Filters
+<img width="1919" height="991" alt="image" src="https://github.com/user-attachments/assets/aa0f01a1-9eec-499c-a91a-be9f48e501e4" />
+
 Restaurant Detail Page
+<img width="1914" height="1002" alt="image" src="https://github.com/user-attachments/assets/f6a04b25-89de-485b-9139-3e62db3f1334" />
+
 Review & Rating System
+<img width="668" height="558" alt="image" src="https://github.com/user-attachments/assets/d34df8a6-acd6-4fc7-90f8-87c21bee4c9a" />
+<img width="1120" height="516" alt="image" src="https://github.com/user-attachments/assets/8c0f0d86-f0fa-46a2-9be5-6797c2c53270" />
+
+
 User Dashboard / My Account
+<img width="1919" height="988" alt="image" src="https://github.com/user-attachments/assets/547b2336-e14a-4403-9f0d-a3cc3108f09f" />
+
 Admin Panel (CRUD Operations)
+<img width="1600" height="766" alt="WhatsApp Image 2026-06-01 at 10 51 57 PM" src="https://github.com/user-attachments/assets/397e9de2-0b58-45ab-9405-b21905170b83" />
+
 Coupon Generation & Download
+<img width="1600" height="763" alt="image" src="https://github.com/user-attachments/assets/615148f3-5acd-40e2-82bb-56b3ed4f0d2f" />
+
 
 [UPDATE HERE] — Actual screenshots yahan add kar den (images upload karke link daalen)
 
