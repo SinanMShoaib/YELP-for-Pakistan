@@ -117,26 +117,27 @@ node seed-admin.js
 ## 📸 Screenshots
 
 #### 🏠 Home Page (with beautiful 3D Animation)
-![Home Page](https://github.com)
+<img width="1909" height="992" alt="Screenshot 2026-06-01 224146" src="https://github.com/user-attachments/assets/9c80208f-fb9f-4d17-a471-04e99dcf5ac4" />
 
 #### 🔍 Restaurant Search & Filters
-![Restaurant Search](https://github.com)
+<img width="1919" height="991" alt="Screenshot 2026-06-01 224651" src="https://github.com/user-attachments/assets/7572b410-b98e-4b9e-a160-7c1e8aa64a54" />
 
 #### 📄 Restaurant Detail Page
-![Restaurant Detail](https://github.com)
+<img width="1914" height="1002" alt="Screenshot 2026-06-01 224730" src="https://github.com/user-attachments/assets/99173ff3-c337-4396-9732-aedfbceae3df" />
 
 #### ⭐ Review & Rating System
-![Review 1](https://github.com)
-![Review 2](https://github.com)
+<img width="668" height="558" alt="Screenshot 2026-06-01 224836" src="https://github.com/user-attachments/assets/e235078d-5953-456a-bc6c-715f160a9316" />
+
+<img width="1120" height="516" alt="Screenshot 2026-06-01 224859" src="https://github.com/user-attachments/assets/74aa6a5a-6178-46ab-8bb6-f3168eb58f52" />
 
 #### 👤 User Dashboard / My Account
-![User Dashboard](https://github.com)
+<img width="1919" height="988" alt="Screenshot 2026-06-01 224923" src="https://github.com/user-attachments/assets/86d20985-4646-4402-88b5-5d5714c76bfa" />
 
 #### ⚙️ Admin Panel (CRUD Operations)
-![Admin Panel](https://github.com)
+<img width="1600" height="766" alt="admin pannel" src="https://github.com/user-attachments/assets/85e18ad5-d687-4655-9281-af4e9dab798e" />
 
 #### 🎫 Coupon Generation & Download
-![Coupon](https://github.com)
+<img width="1600" height="763" alt="coupon code" src="https://github.com/user-attachments/assets/00eea4b2-5873-4ba7-860e-c508f22b4db9" />
 
 ---
 
