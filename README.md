@@ -98,30 +98,29 @@ Video Demo: [UPDATE HERE - Video Link Daalen]
 
 📸 Screenshots
 
-Home Page (with beautiful 3D Animation)
-<img width="1909" height="992" alt="Screenshot 2026-06-01 224146" src="https://github.com/user-attachments/assets/425ead5d-e33f-47f4-bd40-aeaf252551e4" />
+### 📷 Screenshots
 
-Restaurant Search & Filters
-<img width="1919" height="991" alt="Screenshot 2026-06-01 224651" src="https://github.com/user-attachments/assets/141ce4d9-a7fa-4912-be8a-73e411351cd0" />
+#### Home Page (with beautiful 3D Animation)
+![Home Page](https://github.com)
 
-Restaurant Detail Page
-<img width="1914" height="1002" alt="Screenshot 2026-06-01 224730" src="https://github.com/user-attachments/assets/3332c1db-2757-4f5f-8960-78385f3a1f2e" />
+#### Restaurant Search & Filters
+![Restaurant Search](https://github.com)
 
-Review & Rating System
-<img width="668" height="558" alt="Screenshot 2026-06-01 224836" src="https://github.com/user-attachments/assets/e8010dc0-b20e-4cd3-be9d-1e6c27766fb2" />
-<img width="1120" height="516" alt="Screenshot 2026-06-01 224859" src="https://github.com/user-attachments/assets/cf7b79ad-86d3-4eb4-855c-2d1acc4edc4e" />
+#### Restaurant Detail Page
+![Restaurant Detail](https://github.com)
 
+#### Review & Rating System
+![Review 1](https://github.com)
+![Review 2](https://github.com)
 
-User Dashboard / My Account
-<img width="1919" height="988" alt="Screenshot 2026-06-01 224923" src="https://github.com/user-attachments/assets/1f2d473c-c75e-4943-9de2-eb0a3fb6394d" />
+#### User Dashboard / My Account
+![User Dashboard](https://github.com)
 
-Admin Panel (CRUD Operations)
-<img width="1600" height="766" alt="admin pannel" src="https://github.com/user-attachments/assets/97e72370-1290-4dc2-8564-c582d44aba91" />
+#### Admin Panel (CRUD Operations)
+![Admin Panel](https://github.com)
 
-Coupon Generation & Download
-<img width="1600" height="763" alt="coupon code" src="https://github.com/user-attachments/assets/81a3eb59-fb6f-4071-b546-52ce9b316b45" />
-
-
+#### Coupon Generation & Download
+![Coupon](https://github.com)
 [UPDATE HERE] — Actual screenshots yahan add kar den (images upload karke link daalen)
 
 ✅ Key Features
