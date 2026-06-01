@@ -23,9 +23,9 @@
 
 | Name                  | Roll Number     | Contribution                          |
 |-----------------------|-----------------|---------------------------------------|
-| Sinan M. Shoaib       | 2504600         | Backend Development                   |
-| Abdul Rafay           | 2502093         | Frontend Development                  |
-| Abdul Sattar          | 2504605         | Database & Integration                |
+| Sinan M. Shoaib       | 2504600         | Backend Development                       |
+| Abdul Rafay           | 2502093         | Frontend Development & Function additions |
+| Abdul Sattar          | 2504605         | Database & Integration                    |
 
 ---
 
@@ -148,6 +148,7 @@ node seed-admin.js
 - **JWT Authentication** (Secure Login & Signup)
 - **Admin Panel** with full CRUD Operations
 - **Real Database Integration** with MongoDB Atlas
+- **QR Generation** Auto
 - **Responsive UI** working smoothly across all devices
 
 ---
