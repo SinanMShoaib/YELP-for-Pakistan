@@ -110,7 +110,7 @@ node seed-admin.js
 ## 🌐 Live Demo
 
 - **Live URL:** [https://yelp-for-pakistan.vercel.app](https://yelp-for-pakistan.vercel.app)
-- **Video Demo:** *[UPDATE HERE - Video Link Daalen]*
+- **Video Demo:** (https://1drv.ms/v/c/89d3a343bf4431ce/IQAgDHf3rKj0Q7pNm_bPyzjDAblEsH4H7GSJDDcpjNvws2U?e=ziX5X2)
 
 ---
 
