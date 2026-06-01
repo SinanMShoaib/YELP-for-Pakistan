@@ -99,27 +99,27 @@ Video Demo: [UPDATE HERE - Video Link Daalen]
 📸 Screenshots
 
 Home Page (with beautiful 3D Animation)
-<img width="1909" height="992" alt="image" src="https://github.com/user-attachments/assets/ca1af319-d1b7-408d-ac10-2de5a3486731" />
+<img width="1909" height="992" alt="Screenshot 2026-06-01 224146" src="https://github.com/user-attachments/assets/425ead5d-e33f-47f4-bd40-aeaf252551e4" />
 
 Restaurant Search & Filters
-<img width="1919" height="991" alt="image" src="https://github.com/user-attachments/assets/aa0f01a1-9eec-499c-a91a-be9f48e501e4" />
+<img width="1919" height="991" alt="Screenshot 2026-06-01 224651" src="https://github.com/user-attachments/assets/141ce4d9-a7fa-4912-be8a-73e411351cd0" />
 
 Restaurant Detail Page
-<img width="1914" height="1002" alt="image" src="https://github.com/user-attachments/assets/f6a04b25-89de-485b-9139-3e62db3f1334" />
+<img width="1914" height="1002" alt="Screenshot 2026-06-01 224730" src="https://github.com/user-attachments/assets/3332c1db-2757-4f5f-8960-78385f3a1f2e" />
 
 Review & Rating System
-<img width="668" height="558" alt="image" src="https://github.com/user-attachments/assets/d34df8a6-acd6-4fc7-90f8-87c21bee4c9a" />
-<img width="1120" height="516" alt="image" src="https://github.com/user-attachments/assets/8c0f0d86-f0fa-46a2-9be5-6797c2c53270" />
+<img width="668" height="558" alt="Screenshot 2026-06-01 224836" src="https://github.com/user-attachments/assets/e8010dc0-b20e-4cd3-be9d-1e6c27766fb2" />
+<img width="1120" height="516" alt="Screenshot 2026-06-01 224859" src="https://github.com/user-attachments/assets/cf7b79ad-86d3-4eb4-855c-2d1acc4edc4e" />
 
 
 User Dashboard / My Account
-<img width="1919" height="988" alt="image" src="https://github.com/user-attachments/assets/547b2336-e14a-4403-9f0d-a3cc3108f09f" />
+<img width="1919" height="988" alt="Screenshot 2026-06-01 224923" src="https://github.com/user-attachments/assets/1f2d473c-c75e-4943-9de2-eb0a3fb6394d" />
 
 Admin Panel (CRUD Operations)
-<img width="1600" height="766" alt="WhatsApp Image 2026-06-01 at 10 51 57 PM" src="https://github.com/user-attachments/assets/397e9de2-0b58-45ab-9405-b21905170b83" />
+<img width="1600" height="766" alt="admin pannel" src="https://github.com/user-attachments/assets/97e72370-1290-4dc2-8564-c582d44aba91" />
 
 Coupon Generation & Download
-<img width="1600" height="763" alt="image" src="https://github.com/user-attachments/assets/615148f3-5acd-40e2-82bb-56b3ed4f0d2f" />
+<img width="1600" height="763" alt="coupon code" src="https://github.com/user-attachments/assets/81a3eb59-fb6f-4071-b546-52ce9b316b45" />
 
 
 [UPDATE HERE] — Actual screenshots yahan add kar den (images upload karke link daalen)
