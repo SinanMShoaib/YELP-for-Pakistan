@@ -8,6 +8,7 @@ const reviewRoutes = require('./routes/reviewRoutes');
 
 const authRoutes = require('./routes/authRoutes');
 const couponRoutes = require('./routes/couponRoutes');
+const statsRoutes = require('./routes/statsRoutes');
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use('/api/reviews', reviewRoutes);
 
 app.use('/api/auth', authRoutes); // <-- New Auth Routes
 app.use('/api/coupons', couponRoutes);
+app.use('/api/stats', statsRoutes);
 
 // The Connection Logic
 mongoose.connect(process.env.MONGO_URI)

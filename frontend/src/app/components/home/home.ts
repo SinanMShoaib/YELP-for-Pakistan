@@ -20,12 +20,20 @@ export class HomeComponent implements OnInit {
   searchQuery: string = '';
   recentActivity: any[] = [];
 
+  // Live Impact Statistics
+  stats = {
+    users: 0,
+    restaurants: 0,
+    reviews: 0,
+    coupons: 0
+  };
+
   // Coupon Verifier
   couponCode: string = '';
   couponResult: any = null;
   couponError: string = '';
   isVerifying: boolean = false;
-  
+
   categories = [
     { name: 'Desi', icon: 'fa-solid fa-pepper-hot', color: '#ff4d4d' },
     { name: 'Fast Food', icon: 'fa-solid fa-burger', color: '#ffcc00' },
@@ -47,6 +55,7 @@ export class HomeComponent implements OnInit {
     this.fetchWeather();
     this.loadTopPicks();
     this.loadRecentActivity();
+    this.loadStats();
   }
 
   fetchWeather() {
@@ -56,7 +65,7 @@ export class HomeComponent implements OnInit {
           const lat = position.coords.latitude;
           const lon = position.coords.longitude;
           const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
-          
+
           this.http.get(url).subscribe({
             next: (data: any) => {
               this.weather = data.current_weather;
@@ -97,6 +106,17 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  loadStats() {
+    this.http.get('/api/stats/platform-stats').subscribe({
+      next: (data: any) => {
+        if (data.success && data.stats) {
+          this.stats = data.stats;
+        }
+      },
+      error: (err) => console.error("Failed to load platform statistics", err)
+    });
+  }
+
   verifyCoupon() {
     if (!this.couponCode.trim()) return;
     this.isVerifying = true;
@@ -123,5 +143,14 @@ export class HomeComponent implements OnInit {
 
   searchCategory(cat: string) {
     this.router.navigate(['/search'], { queryParams: { category: cat } });
+  }
+
+  formatNumber(num: number): string {
+    if (num >= 1000000) {
+      return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M+';
+    } else if (num >= 1000) {
+      return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'k+';
+    }
+    return num + '+';
   }
 }
